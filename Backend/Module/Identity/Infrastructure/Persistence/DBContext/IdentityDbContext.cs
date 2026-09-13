@@ -3,6 +3,9 @@ using Identity.Models.Permission;
 using Identity.Models.Profile;
 using Identity.Models.Role;
 using Microsoft.EntityFrameworkCore;
+using MySql.EntityFrameworkCore.Extensions;
+using MySqlModelBuilderExtensions =
+    MySql.EntityFrameworkCore.Extensions.MySQLModelBuilderExtensions;
 
 namespace Identity.Infrastructure.Persistence.DBContext
 {
@@ -22,8 +25,17 @@ namespace Identity.Infrastructure.Persistence.DBContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.HasCharSet("utf8mb4").UseCollation("utf8mb4_unicode_ci");
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(IdentityDbContext).Assembly);
+
+            modelBuilder.HasCharSet("utf8mb4");
+
+            MySqlModelBuilderExtensions.UseCollation(
+                modelBuilder,
+                "utf8mb4_unicode_ci"
+            );
+
+            modelBuilder.ApplyConfigurationsFromAssembly(
+                typeof(IdentityDbContext).Assembly
+            );
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Identity.Infrastructure.DIContainer
                                        "Connection string 'IdentityTest' was not found.");
 
             services.AddDbContext<IdentityDbContext>(options => {
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+                options.UseMySQL(connectionString);
 
                 // options.EnableServiceProviderCaching();
                 options.EnableThreadSafetyChecks();

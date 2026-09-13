@@ -2,14 +2,14 @@ using Shared.ModelHelper;
 
 namespace Frontend.Models
 {
-    public class AccountViewModel(string email, bool isActive, List<string> roleNames, string? roleCode, UserProfileViewModel userProfile, DateTime createdAt, DateTime updatedAt)
+    public class AccountViewModel(string email, bool isActive, List<string> roleNames, UserProfileViewModel userProfile, DateTime createdAt, DateTime updatedAt)
     {
         public string Email { get; private set; } = email;
         public bool IsActive { get; private set; } = isActive;
         public List<string> RoleNames { get; private set; } = roleNames;
         public UserProfileViewModel UserProfile { get; private set; } = userProfile;
-        public DateTime CreatedAt { get; private set; }
-        public DateTime UpdatedAt { get; private set; }
+        public DateTime CreatedAt { get; private set; } = createdAt;
+        public DateTime UpdatedAt { get; private set; } = updatedAt;
 
 
         #region SET
