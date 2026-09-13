@@ -51,10 +51,10 @@ namespace Identity.Models.Profile
         public string? UserProfilePhoneNumber { get; private set; } = "";
 
         [MaxLength(255)]
-        public string UserProfileAvatarUrl { get; private set; } = "";
+        public string? UserProfileAvatarUrl { get; private set; } = "";
 
         [MaxLength(255)]
-        public string UserProfileBackgroundUrl { get; private set; } = "";
+        public string? UserProfileBackgroundUrl { get; private set; } = "";
 
         public DateTime UserProfileCreatedAt { get; init; } = DateTime.Now;
         public DateTime UserProfileUpdatedAt { get; private set; } = DateTime.Now;
@@ -63,13 +63,13 @@ namespace Identity.Models.Profile
 
         public void SetUserProfileFirstName(string firstName)
         {
-            UserProfileFirstName = ModelFieldGuard.Required(firstName, 100, nameof(firstName));
+            UserProfileFirstName = ModelFieldGuard.Required(firstName, 30, nameof(firstName));
             UserProfileUpdatedAt = DateTime.Now;
         }
 
         public void SetUserProfileLastName(string lastName)
         {
-            UserProfileLastName = ModelFieldGuard.Required(lastName, 100, nameof(lastName));
+            UserProfileLastName = ModelFieldGuard.Required(lastName, 30, nameof(lastName));
             UserProfileUpdatedAt = DateTime.Now;
         }
 

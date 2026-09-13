@@ -38,6 +38,9 @@ namespace Identity.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(true)
                 .IsRequired();
 
+            entity.HasIndex(account => new { account.AccountIsActive, account.AccountId })
+                .HasDatabaseName("idx_account_is_active_account_id");
+
             entity.Property(account => account.AccountCreatedAt)
                 .HasColumnName("account_created_at")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -45,14 +48,15 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
             entity.Property(account => account.AccountUpdatedAt)
                 .HasColumnName("account_updated_at")
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAddOrUpdate();
 
             entity.HasMany(account => account.Roles).WithMany().UsingEntity<AccountRoleModel>(
                 right => right.HasOne<RoleModel>().WithMany().HasForeignKey(role => role.RoleId)
-                    .OnDelete(DeleteBehavior.Cascade),
+                    .OnDelete(DeleteBehavior.Restrict),
                 left => left.HasOne<AccountModel>().WithMany().HasForeignKey(account => account.AccountId)
-                    .OnDelete(DeleteBehavior.Cascade),
+                    .OnDelete(DeleteBehavior.Restrict),
                 join => {
                     join.ToTable("account_role");
                     join.HasKey(accountRole => new
@@ -75,11 +79,11 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
             entity.HasMany(account => account.Permissions).WithMany().UsingEntity<AccountAdditionalPermissionModel>(
                 right => right.HasOne<PermissionModel>().WithMany().HasForeignKey(permission => permission.PermissionId)
-                    .OnDelete(DeleteBehavior.Cascade),
+                    .OnDelete(DeleteBehavior.Restrict),
                 left => left.HasOne<AccountModel>().WithMany().HasForeignKey(account => account.AccountId)
-                    .OnDelete(DeleteBehavior.Cascade),
+                    .OnDelete(DeleteBehavior.Restrict),
                 join => {
-                    join.ToTable("account_permission");
+                    join.ToTable("account_additional_permission");
                     join.HasKey(accountPermission => new
                     {
                         accountPermission.AccountId,
@@ -101,7 +105,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
             entity.HasOne(account => account.UserProfile)
                 .WithOne()
                 .HasForeignKey<UserProfileModel>(profile => profile.UserProfileAccountId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

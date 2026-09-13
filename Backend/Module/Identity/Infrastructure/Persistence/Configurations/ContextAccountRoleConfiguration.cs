@@ -30,15 +30,18 @@ namespace Identity.Infrastructure.Persistence.Configurations
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAdd();
 
+            entity.HasIndex(accountRole => accountRole.RoleId)
+                .HasDatabaseName("idx_account_role_role_id");
+
             entity.HasOne<AccountModel>()
                 .WithMany()
                 .HasForeignKey(accountRole => accountRole.AccountId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne<RoleModel>()
                 .WithMany()
                 .HasForeignKey(accountRole => accountRole.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

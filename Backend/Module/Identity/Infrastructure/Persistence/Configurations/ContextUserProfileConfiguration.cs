@@ -20,6 +20,10 @@ namespace Identity.Infrastructure.Persistence.Configurations
                 .HasColumnName("user_profile_account_id")
                 .IsRequired();
 
+            entity.HasIndex(userProfile => userProfile.UserProfileAccountId)
+                .IsUnique()
+                .HasDatabaseName("idx_user_profile_account_id");
+
             entity.Property(userProfile => userProfile.UserProfileFirstName)
                 .HasColumnName("user_profile_first_name")
                 .HasMaxLength(30);
@@ -31,6 +35,9 @@ namespace Identity.Infrastructure.Persistence.Configurations
             entity.Property(userProfile => userProfile.UserProfileDateOfBirth)
                 .HasColumnName("user_profile_date_of_birth");
 
+            entity.HasIndex(userProfile => userProfile.UserProfileDateOfBirth)
+                .HasDatabaseName("idx_user_profile_date_of_birth");
+
             entity.Property(userProfile => userProfile.UserProfileGender)
                 .HasColumnName("user_profile_gender")
                 .HasConversion<string>()
@@ -39,6 +46,9 @@ namespace Identity.Infrastructure.Persistence.Configurations
             entity.Property(userProfile => userProfile.UserProfilePhoneNumber)
                 .HasColumnName("user_profile_phone_number")
                 .HasMaxLength(10);
+
+            entity.HasIndex(userProfile => userProfile.UserProfilePhoneNumber)
+                .HasDatabaseName("idx_user_profile_phone_number");
 
             entity.Property(userProfile => userProfile.UserProfileAvatarUrl)
                 .HasColumnName("user_profile_avatar_url")
@@ -55,6 +65,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
             entity.Property(userProfile => userProfile.UserProfileUpdatedAt)
                 .HasColumnName("user_profile_updated_at")
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAddOrUpdate();
         }

@@ -31,15 +31,18 @@ namespace Identity.Infrastructure.Persistence.Configurations
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAdd();
 
+            entity.HasIndex(rolePermission => rolePermission.PermissionId)
+                .HasDatabaseName("idx_role_permission_permission_id");
+
             entity.HasOne<RoleModel>()
                 .WithMany()
                 .HasForeignKey(rolePermission => rolePermission.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne<PermissionModel>()
                 .WithMany()
                 .HasForeignKey(rolePermission => rolePermission.PermissionId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

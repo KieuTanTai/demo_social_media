@@ -27,7 +27,7 @@ namespace Identity.Models.Role
 
         public void SetRoleName(string name)
         {
-            RoleName = ModelFieldGuard.Required(name, 100, nameof(name));
+            RoleName = ModelFieldGuard.Required(name, 150, nameof(name));
             RoleUpdatedAt = DateTime.Now;
         }
 

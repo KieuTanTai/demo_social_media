@@ -52,13 +52,16 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
             entity.Property(role => role.RoleUpdatedAt)
                 .HasColumnName("role_updated_at")
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAddOrUpdate();
 
             entity.HasMany(role => role.Permissions).WithMany().UsingEntity<RolePermissionModel>(
                 rolePermission => rolePermission.HasOne<PermissionModel>().WithMany()
-                    .HasForeignKey(rolePerm => rolePerm.PermissionId),
-                rolePermission => rolePermission.HasOne<RoleModel>().WithMany().HasForeignKey(rolePerm => rolePerm.RoleId),
+                    .HasForeignKey(rolePerm => rolePerm.PermissionId)
+                    .OnDelete(DeleteBehavior.Restrict),
+                rolePermission => rolePermission.HasOne<RoleModel>().WithMany().HasForeignKey(rolePerm => rolePerm.RoleId)
+                    .OnDelete(DeleteBehavior.Restrict),
                 rolePermission => {
                     rolePermission.ToTable("role_permission");
                     rolePermission.HasKey(rolePerm => new

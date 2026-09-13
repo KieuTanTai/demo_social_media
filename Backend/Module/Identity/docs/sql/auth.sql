@@ -129,6 +129,10 @@ SHOW COLUMNS FROM account;
 SHOW COLUMNS FROM role;
 SHOW COLUMNS FROM permission;
 SHOW COLUMNS FROM account_additional_permission;
+select * from account;
+select * from role;
+select * from permission;
+select * from user_profile;
 
 SHOW VARIABLES LIKE 'character_set_server';
 SHOW VARIABLES LIKE 'collation_server';
