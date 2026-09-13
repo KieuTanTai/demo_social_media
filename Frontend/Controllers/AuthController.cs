@@ -31,7 +31,7 @@ namespace Frontend.Controllers
             try
             {
                 var client = _clientFactory.CreateClient("BackendApiIdentityHttps");
-                var response = await client.PostAsJsonAsync("api/account/loginRequest", requestDto, cancellationToken);
+                var response = await client.PostAsJsonAsync("api/account/login", requestDto, cancellationToken);
                 if (!response.IsSuccessStatusCode)
                 {
                     var error = await response.Content.ReadAsStringAsync(cancellationToken);
