@@ -62,7 +62,8 @@ namespace Identity.Infrastructure.Persistence.Configurations
                     .OnDelete(DeleteBehavior.Restrict),
                 rolePermission => rolePermission.HasOne<RoleModel>().WithMany().HasForeignKey(rolePerm => rolePerm.RoleId)
                     .OnDelete(DeleteBehavior.Restrict),
-                rolePermission => {
+                rolePermission =>
+                {
                     rolePermission.ToTable("role_permission");
                     rolePermission.HasKey(rolePerm => new
                     {

@@ -13,8 +13,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
             entity.HasKey(userProfile => userProfile.UserProfileId);
 
             entity.Property(userProfile => userProfile.UserProfileId)
-                .HasColumnName("user_profile_id")
-                .ValueGeneratedOnAdd();
+                .HasColumnName("user_profile_id");
 
             entity.Property(userProfile => userProfile.UserProfileAccountId)
                 .HasColumnName("user_profile_account_id")
@@ -53,9 +52,9 @@ namespace Identity.Infrastructure.Persistence.Configurations
             entity.Property(userProfile => userProfile.UserProfileAvatarUrl)
                 .HasColumnName("user_profile_avatar_url")
                 .HasMaxLength(255);
-
-            entity.Property(userProfile => userProfile.UserProfileBackgroundUrl)
-                .HasColumnName("user_profile_background_url")
+            
+            entity.Property(model => model.UserProfileAddress)
+                .HasColumnName("user_profile_address")
                 .HasMaxLength(255);
 
             entity.Property(userProfile => userProfile.UserProfileCreatedAt)

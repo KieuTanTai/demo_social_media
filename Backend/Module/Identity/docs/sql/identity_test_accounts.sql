@@ -88,6 +88,7 @@ COMMIT;
 
 select *
 from `account`;
+select * from user_profile;
 select *
 from `account_role`;
 select *
@@ -98,6 +99,7 @@ select *
 from `role_permission`;
 select *
 from `account_additional_permission`;
+
 
 select *
 from account_role

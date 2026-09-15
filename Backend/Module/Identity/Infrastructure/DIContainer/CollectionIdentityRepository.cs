@@ -25,7 +25,8 @@ namespace Identity.Infrastructure.DIContainer
                                    ?? throw new InvalidOperationException(
                                        "Connection string 'IdentityTest' was not found.");
 
-            services.AddDbContext<IdentityDbContext>(options => {
+            services.AddDbContext<IdentityDbContext>(options =>
+            {
                 options.UseMySQL(connectionString);
 
                 // options.EnableServiceProviderCaching();

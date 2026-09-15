@@ -10,9 +10,13 @@ namespace Identity.Presentation.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController(IAccountApplication accountApplication, IAccountHelper helper) : ControllerBase
+    public class AccountController(IAccountApplication accountApplication, 
+        IUserProfileApplication userProfileApplication,
+        IAccountHelper helper) : ControllerBase
     {
         private readonly IAccountApplication _accountApplication = accountApplication;
+
+        private readonly IUserProfileApplication _userProfileApplication = userProfileApplication;
 
         private readonly IAccountHelper _helper = helper;
 
@@ -168,8 +172,10 @@ namespace Identity.Presentation.Controller
             var roleNames = result.Roles.Select(role => role.RoleName).ToList();
             var response = new RecordAuthResponse(result.AccountEmail!, result.AccountIsActive, roleNames,
                 result.UserProfile?.UserProfileFirstName, result.UserProfile?.UserProfileLastName,
-                result.UserProfile?.UserProfileAvatarUrl, result.UserProfile?.UserProfileBackgroundUrl,
-                result.UserProfile?.UserProfilePhoneNumber, result.UserProfile?.UserProfileDateOfBirth, result.UserProfile!.UserProfileGender, result.AccountCreatedAt, result.AccountUpdatedAt);
+                result.UserProfile?.UserProfileAvatarUrl, result.UserProfile?.UserProfilePhoneNumber, 
+                result.UserProfile?.UserProfileDateOfBirth, result.UserProfile!.UserProfileGender, 
+                result.AccountCreatedAt, result.AccountUpdatedAt,
+                result.UserProfile.UserProfileAddress, result.UserProfile.UserProfileId);
             return response;
         }
 

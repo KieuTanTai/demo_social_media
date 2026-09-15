@@ -17,7 +17,8 @@ namespace Identity.Infrastructure.DIContainer
             var accountRules = new AccountRulesModel();
             configuration.GetSection("AccountRules").Bind(accountRules);
 
-            services.Configure<PasswordHasherOptions>(options => {
+            services.Configure<PasswordHasherOptions>(options =>
+            {
                 options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV3;
                 options.IterationCount = configuration.GetValue<int>("PasswordHasherOptions:IterationCount");
             });

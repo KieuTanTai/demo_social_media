@@ -9,11 +9,11 @@ namespace Shared.Persistence.Record.Auth
         string? FirstName,
         string? LastName,
         string? AvatarUrl,
-        string? BackgroundUrl,
         string? PhoneNumber,
         DateOnly? DateOfBirth,
-        ESystemUserGender Gender, 
-        DateTime CreatedAt, 
-        DateTime UpdatedAt
+        ESystemUserGender Gender,
+        DateTime CreatedAt,
+        DateTime UpdatedAt,
+        string? Address = "", string? IdentityCode = ""
     );
 }

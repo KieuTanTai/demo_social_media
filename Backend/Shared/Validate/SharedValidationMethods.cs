@@ -1,4 +1,4 @@
 namespace Shared.Validate
 {
-    public static class SharedValidationMethods {}
+    public static class SharedValidationMethods { }
 }

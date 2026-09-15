@@ -33,12 +33,12 @@ namespace Frontend.Models
         {
             UserProfile = userProfile;
         }
-        
+
         public void SetCreatedAt(DateTime createdAt)
         {
             CreatedAt = createdAt;
         }
-        
+
         public void SetUpdatedAt(DateTime updatedAt)
         {
             UpdatedAt = updatedAt;

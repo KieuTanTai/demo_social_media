@@ -6,36 +6,33 @@ namespace Identity.Models.Profile
 {
     public class UserProfileModel
     {
-        public UserProfileModel(int userProfileId, Guid userProfileAccountId, string userProfileFirstName, string userProfileLastName, DateOnly userProfileBirthday, ESystemUserGender userProfileGender,
-            string userProfilePhoneNumber, string userProfileAvatar, string userProfileBackground)
+        public UserProfileModel(string userProfileId, Guid userProfileAccountId, string? userProfileFirstName, string? userProfileLastName, DateOnly? userProfileDateOfBirth, ESystemUserGender userProfileGender,
+            string? userProfilePhoneNumber, string? userProfileAddress, string? userProfileAvatarUrl)
         {
-            UserProfileId = userProfileId;
+            UserProfileId = userProfileId ?? throw new ArgumentNullException(nameof(userProfileId));
+            if (string.IsNullOrWhiteSpace(UserProfileId) || UserProfileId.Length != 12)
+                throw new ArgumentException("User Profile Id must be 12 characters long.", nameof(UserProfileId));
             UserProfileAccountId = userProfileAccountId;
-            UserProfileFirstName = userProfileFirstName ?? throw new ArgumentNullException(nameof(userProfileFirstName));
-            UserProfileLastName = userProfileLastName ?? throw new ArgumentNullException(nameof(userProfileLastName));
-            UserProfileDateOfBirth = userProfileBirthday;
+            UserProfileFirstName = userProfileFirstName;
+            UserProfileLastName = userProfileLastName;
+            UserProfileDateOfBirth = userProfileDateOfBirth;
             UserProfileGender = userProfileGender;
-            UserProfilePhoneNumber = userProfilePhoneNumber ?? throw new ArgumentNullException(nameof(userProfilePhoneNumber));
-            UserProfileAvatarUrl = userProfileAvatar ?? throw new ArgumentNullException(nameof(userProfileAvatar));
-            UserProfileBackgroundUrl = userProfileBackground ?? throw new ArgumentNullException(nameof(userProfileBackground));
+            UserProfilePhoneNumber = userProfilePhoneNumber;
+            UserProfileAddress = userProfileAddress;
+            UserProfileAvatarUrl = userProfileAvatarUrl;
         }
 
-        public UserProfileModel(Guid userProfileAccountId, string userProfileFirstName, string userProfileLastName, DateOnly userProfileBirthday, ESystemUserGender userProfileGender)
+        public UserProfileModel(string userProfileId, Guid userProfileAccountId)
         {
-            UserProfileAccountId = userProfileAccountId;
-            UserProfileFirstName = userProfileFirstName ?? throw new ArgumentNullException(nameof(userProfileFirstName));
-            UserProfileLastName = userProfileLastName ?? throw new ArgumentNullException(nameof(userProfileLastName));
-            UserProfileDateOfBirth = userProfileBirthday;
-            UserProfileGender = userProfileGender;
-        }
-
-
-        public UserProfileModel(Guid userProfileAccountId)
-        {
+            UserProfileId = userProfileId ?? throw new ArgumentNullException(nameof(userProfileId));
+            if (string.IsNullOrWhiteSpace(UserProfileId) || UserProfileId.Length != 12)
+                throw new ArgumentException("User Profile Id must be 12 characters long.", nameof(UserProfileId));
             UserProfileAccountId = userProfileAccountId;
         }
 
-        public int UserProfileId { get; init; }
+        [Required]
+        [StringLength(12, MinimumLength = 12, ErrorMessage = "User Profile Id must be 12 characters long.")]
+        public string UserProfileId { get; private set; }
         public Guid UserProfileAccountId { get; init; }
 
         [MaxLength(30)]
@@ -51,16 +48,23 @@ namespace Identity.Models.Profile
         public string? UserProfilePhoneNumber { get; private set; } = "";
 
         [MaxLength(255)]
-        public string? UserProfileAvatarUrl { get; private set; } = "";
-
+        public string? UserProfileAddress { get; private set; } = "";
+        
         [MaxLength(255)]
-        public string? UserProfileBackgroundUrl { get; private set; } = "";
+        public string? UserProfileAvatarUrl { get; private set; } = "";
 
         public DateTime UserProfileCreatedAt { get; init; } = DateTime.Now;
         public DateTime UserProfileUpdatedAt { get; private set; } = DateTime.Now;
 
         #region SET
 
+        public void SetUserProfileId(string id)
+        {
+            UserProfileId = ModelFieldGuard.Required(id, 12, nameof(id));
+            UserProfileUpdatedAt = DateTime.Now;
+        }
+        
+        
         public void SetUserProfileFirstName(string firstName)
         {
             UserProfileFirstName = ModelFieldGuard.Required(firstName, 30, nameof(firstName));
@@ -96,11 +100,10 @@ namespace Identity.Models.Profile
             UserProfileAvatarUrl = ModelFieldGuard.Required(avatar, 255, nameof(avatar));
             UserProfileUpdatedAt = DateTime.Now;
         }
-
-        public void SetUserProfileBackground(string background)
+        
+        public void SetUserProfileAddress(string address)
         {
-            UserProfileBackgroundUrl = ModelFieldGuard.Required(background, 255, nameof(background));
-            UserProfileUpdatedAt = DateTime.Now;
+            UserProfileAddress = ModelFieldGuard.Required(address, 255, nameof(address));
         }
 
         #endregion

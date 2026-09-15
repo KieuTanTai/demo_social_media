@@ -18,7 +18,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/";
     });
 
-builder.Services.Configure<CookiePolicyOptions>(options => {
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
     builder.Configuration.GetSection("CookiePolicy").Bind(options);
     options.Secure = CookieSecurePolicy.Always;
     options.MinimumSameSitePolicy = SameSiteMode.Strict;
@@ -33,7 +34,8 @@ builder.Services.AddAntiforgery(options =>
 });
 
 builder.Services.AddAuthorization();
-builder.Services.AddHttpClient("BackendApiIdentityHttps", (serviceProvider, client) => {
+builder.Services.AddHttpClient("BackendApiIdentityHttps", (serviceProvider, client) =>
+{
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
     var baseUrl = configuration["BackendApi:IdentityHttps"] ?? throw new InvalidOperationException("BackendApi:PrefixHttps not found.");
     client.BaseAddress = new Uri(baseUrl);

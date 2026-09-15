@@ -4,7 +4,7 @@ namespace Identity.Interfaces.IApplication
 {
     public interface IAccountApplication
     {
-        Task<AccountModel> RegisterAsync(string email, string password, CancellationToken cancellationToken = default);
+        Task<AccountModel> RegisterAsync(string email, string password, string identityCode, CancellationToken cancellationToken = default);
         Task<AccountModel> LoginAsync(string email, string password, CancellationToken cancellationToken = default);
         Task<bool> LogoutAsync(string email, CancellationToken cancellationToken = default);
         Task<int> ChangePasswordAsync(string email, string oldPassword, string newPassword, CancellationToken cancellationToken = default);

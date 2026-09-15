@@ -118,22 +118,37 @@ namespace Identity.Infrastructure.Repository.UserProfileRepository
                 cancellationToken);
         }
 
+        public async Task<RecordBaseCursorPage<UserProfileModel>> GetProfileByAddressAsync(Guid? cursor, string address, int pageSize, CancellationToken cancellationToken = default)
+        {
+            ArgumentOutOfRangeException.ThrowIfLessThan(pageSize, 1);
+            var query = _db.UserProfiles.AsNoTracking();
+            if (cursor.HasValue)
+            {
+                query = query.Where(profile => profile.UserProfileAccountId < cursor.Value);
+            }
+            query = query.Where(profile => profile.UserProfileAddress != null && profile.UserProfileAddress.Contains(address));
+            query = query.OrderByDescending(profile => profile.UserProfileId);
+            var profiles = query.ToAsyncEnumerable();
+            return await SharedGetApplyPagingRepository.ApplyPaging(profiles, pageSize, profile => profile.UserProfileAccountId,
+                cancellationToken);
+        }
+        
         public async Task<IReadOnlyList<UserProfileModel>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _db.UserProfiles.AsNoTracking().ToListAsync(cancellationToken);
         }
 
-        public async Task<UserProfileModel?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<UserProfileModel?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
             return await _db.UserProfiles.AsNoTracking().FirstOrDefaultAsync(profile => profile.UserProfileId == id, cancellationToken);
         }
 
-        public async Task<UserProfileModel?> GetTrackedByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<UserProfileModel?> GetTrackedByIdAsync(string id, CancellationToken cancellationToken = default)
         {
             return await _db.UserProfiles.FirstOrDefaultAsync(profile => profile.UserProfileId == id, cancellationToken);
         }
 
-        public async Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
         {
             return await _db.UserProfiles.AnyAsync(profile => profile.UserProfileId == id, cancellationToken);
         }
@@ -144,7 +159,7 @@ namespace Identity.Infrastructure.Repository.UserProfileRepository
 
         public async Task AddAsync(UserProfileModel entity, CancellationToken cancellationToken = default)
         {
-            if (entity.UserProfileId == 0)
+            if (string.IsNullOrWhiteSpace(entity.UserProfileId))
             {
                 throw new ArgumentException("UserProfileModel id is required.", nameof(entity.UserProfileId));
             }
@@ -159,7 +174,7 @@ namespace Identity.Infrastructure.Repository.UserProfileRepository
 
         public async Task UpdateAsync(UserProfileModel entity, CancellationToken cancellationToken = default)
         {
-            if (entity.UserProfileId == 0)
+            if (string.IsNullOrWhiteSpace(entity.UserProfileId))
             {
                 throw new ArgumentException("UserProfileModel id is required.", nameof(entity.UserProfileId));
             }

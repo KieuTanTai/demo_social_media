@@ -2,7 +2,7 @@ namespace Identity.Models.Account
 {
     public class AccountAdditionalPermissionModel
     {
-        public AccountAdditionalPermissionModel() {}
+        public AccountAdditionalPermissionModel() { }
 
         public AccountAdditionalPermissionModel(Guid accountId, Guid permissionId)
         {

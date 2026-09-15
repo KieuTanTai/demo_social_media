@@ -17,12 +17,7 @@ namespace Identity.Utils
             var pattern = _rules.RegexForEmail;
             return !string.IsNullOrWhiteSpace(email) && Regex.IsMatch(email, pattern);
         }
-
-        public bool IsPhoneNumberValid(string phoneNumber)
-        {
-            var pattern = _rules.RegexForPhoneNumber;
-            return !string.IsNullOrWhiteSpace(phoneNumber) && Regex.IsMatch(phoneNumber, pattern);
-        }
+        
 
         public bool IsPasswordValid(string password)
         {

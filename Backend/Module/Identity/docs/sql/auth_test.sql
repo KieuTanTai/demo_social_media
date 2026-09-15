@@ -139,3 +139,21 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
+alter table `user_profile` drop column `user_profile_background_url`;
+alter table `user_profile`
+    add column `user_profile_cccd` varchar(12) not null default '' after `user_profile_id`; 
+
+alter table `user_profile`
+    drop primary key , add primary key (`user_profile_cccd`),
+    drop column `user_profile_id`;
+
+alter table `user_profile`
+    modify column `user_profile_cccd` varchar(12) not null unique;
+
+alter table `user_profile`
+    rename column `user_profile_cccd` to `user_profile_id`;
+
+alter table `user_profile`
+    add column `user_profile_address` varchar(255) not null default '' after `user_profile_phone_number`;
