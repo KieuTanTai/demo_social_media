@@ -34,7 +34,7 @@ namespace Identity.Presentation.Controller
 
             try
             {
-                var result = await _accountApplication.RegisterAsync(requestDto.Email, requestDto.Password, cancellationToken);
+                var result = await _accountApplication.RegisterAsync(requestDto.Email, requestDto.Password, requestDto.IdentityCode, cancellationToken);
                 var response = MappingResult(result);
                 return Ok(response);
             }
