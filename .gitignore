@@ -95,3 +95,4 @@ Frontend/.cache/
 **/Test/**
 **/Tests/
 **/TestProject/**
+/qodana.yaml
