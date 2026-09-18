@@ -87,7 +87,7 @@ namespace Identity.Infrastructure.Repository.Role
                 throw new ArgumentException("RoleModel id is required.", nameof(entity.RoleId));
             }
 
-            var existedRole = await _db.Roles.FirstOrDefaultAsync(existedRole => existedRole.RoleId == entity.RoleId,
+            var existedRole = await _db.Roles.AsNoTracking().FirstOrDefaultAsync(existedRole => existedRole.RoleId == entity.RoleId,
                 cancellationToken);
 
             if (existedRole is null)

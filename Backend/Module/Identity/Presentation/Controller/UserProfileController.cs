@@ -83,7 +83,7 @@ namespace Identity.Presentation.Controller
             {
                 var newProfileModel = new UserProfileModel(requestDto.IdentityCode, requestDto.AccountId, requestDto.FirstName, requestDto.LastName,
                     requestDto.DateOfBirth, requestDto.UserGender, requestDto.PhoneNumber, requestDto.Address, requestDto.AvatarUrl);
-
+                Console.WriteLine(newProfileModel.UserProfileGender);
                 var result = await _userProfileApplication.UpdateProfileInfoAsync(newProfileModel, cancellationToken);
                 var response = _apiHelper.MappingProfileResult(result);
                 return Ok(response);

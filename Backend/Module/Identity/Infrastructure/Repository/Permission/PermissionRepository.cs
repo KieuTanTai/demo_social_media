@@ -94,7 +94,7 @@ namespace Identity.Infrastructure.Repository.Permission
                 throw new ArgumentException("PermissionModel id is required.", nameof(entity.PermissionId));
             }
 
-            var existedPermission = await context.Permissions.FirstOrDefaultAsync(
+            var existedPermission = await context.Permissions.AsNoTracking().FirstOrDefaultAsync(
                 existedPermission => existedPermission.PermissionId == entity.PermissionId, cancellationToken);
 
             if (existedPermission is null)

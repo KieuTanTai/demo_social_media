@@ -184,12 +184,12 @@ namespace Identity.Infrastructure.Repository.UserProfileRepository
                 throw new ArgumentException("UserProfileModel id is required.", nameof(entity.UserProfileId));
             }
 
-            var existedProfile = await _db.UserProfiles.FirstOrDefaultAsync(existedProfile => existedProfile.UserProfileId == entity.UserProfileId, cancellationToken);
+            var existedProfile = await _db.UserProfiles.AsNoTracking().FirstOrDefaultAsync(existedProfile => existedProfile.UserProfileId == entity.UserProfileId, cancellationToken);
             if (existedProfile is null)
             {
                 throw new InvalidOperationException("UserProfileModel not found!");
             }
-
+            Console.WriteLine("UserProfileModel found!");
             _db.UserProfiles.Update(entity);
         }
 

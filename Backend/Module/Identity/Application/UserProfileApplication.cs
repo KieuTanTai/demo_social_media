@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using Identity.Interfaces.IApplication;
 using Identity.Interfaces.IRepository;
 using Identity.Models.Profile;
+using Shared.Enum;
 using Shared.Interfaces;
 
 namespace Identity.Application
@@ -51,18 +52,15 @@ namespace Identity.Application
 
             try
             {
-                var existingProfile = await _userProfileRepository.GetByIdAsync(userProfile.UserProfileId, cancellationToken);
-                if (existingProfile == null)
-                {
-                    throw new ArgumentException("User profile not found.");
-                }
+                Console.WriteLine(userProfile.UserProfileGender is ESystemUserGender.Male);
                 await _userProfileRepository.UpdateAsync(userProfile, cancellationToken);
                 var affectRows = await _unitOfWork.SaveChangesAsync(cancellationToken);
+                Console.WriteLine(affectRows);
                 return affectRows == 0 ? throw new ArgumentException("Failed to update user profile.") : userProfile;
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("Failed to update user profile.", ex);
+                throw new ArgumentException($"Failed to update user profile. \n {ex.Message}", ex);
             }
         }
 
@@ -82,34 +80,38 @@ namespace Identity.Application
 
         private static bool TryProcessPhoneNumber(string input, out string stringPhoneNumber)
         {
-            stringPhoneNumber = "";
 
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                return false;
-            }
+            stringPhoneNumber = string.Empty;
+            if (string.IsNullOrWhiteSpace(input)) return false;
 
-            // 1. Strip all non-numeric characters (spaces, dashes, plus sign, parentheses)
+            // 1. Remove all non-digit characters except a leading '+' sign (if present)
             var cleaned = MyRegex().Replace(input, "");
 
-            // 2. Standardize international prefix +84 or 84 to local 0
-            if (cleaned.StartsWith("84") && cleaned.Length == 11)
+            // 2. Normalize an international format (+84 or 84) to local '0'
+            if (cleaned.StartsWith("+84"))
+            {
+                cleaned = string.Concat("0", cleaned.AsSpan(3));
+            }
+            else if (cleaned.StartsWith("84") && cleaned.Length == 11)
             {
                 cleaned = string.Concat("0", cleaned.AsSpan(2));
             }
 
-            // 3. Regex validation for Vietnamese mobile operators
-            // Prefixes: 03, 05, 07, 08, 09 followed by exactly 8 digits (10 digits total)
-            var pattern = @"^(03|05|07|08|09)\d{8}$";
-            var match = Regex.Match(cleaned, pattern);
-            var carrierCode = match.Groups[2].Value;
-            var restOfNumber = cleaned[^8..];
+            // 3. Regex validation for Vietnamese mobile prefixes (10 digits total)
+            // Matches prefixes: 03, 05, 07, 08, 09 followed by exactly 8 digits
+            const string pattern = @"^(03|05|07|08|09)\d{8}$";
+
+            if (!Regex.IsMatch(cleaned, pattern))
+            {
+                return false;
+            }
+            stringPhoneNumber = cleaned;
             return true;
+
         }
 
-        [GeneratedRegex(@"[^\d]")]
+        [GeneratedRegex(@"[^\d+]")]
         private static partial Regex MyRegex();
-
         #endregion
     }
 }

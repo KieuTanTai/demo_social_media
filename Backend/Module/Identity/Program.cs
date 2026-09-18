@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Identity.Infrastructure.DIContainer;
+using Identity.Utils.Identity.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,12 +10,13 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 }
+
+
 
 var app = builder.Build();
 app.UseHttpsRedirection();

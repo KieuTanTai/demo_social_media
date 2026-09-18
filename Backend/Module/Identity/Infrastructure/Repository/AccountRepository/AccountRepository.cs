@@ -130,7 +130,7 @@ namespace Identity.Infrastructure.Repository.AccountRepository
 
             if (isExisted)
             {
-                throw new InvalidOperationException("Already existed!");
+                throw new InvalidOperationException($"Already existed! \n {accountModel.AccountEmail}");
             }
             await _db.Accounts.AddAsync(accountModel, cancellationToken);
         }
@@ -144,12 +144,12 @@ namespace Identity.Infrastructure.Repository.AccountRepository
             }
 
             var existedAccount =
-                await _db.Accounts.FirstOrDefaultAsync(existedAccount => existedAccount.AccountId == accountModel.AccountId,
+                await _db.Accounts.AsNoTracking().FirstOrDefaultAsync(existedAccount => existedAccount.AccountId == accountModel.AccountId,
                     cancellationToken);
 
             if (existedAccount is null)
             {
-                throw new InvalidOperationException("AccountModel not found!");
+                throw new InvalidOperationException($"AccountModel not found! \n {accountModel.AccountId}");
             }
             _db.Accounts.Update(accountModel);
         }

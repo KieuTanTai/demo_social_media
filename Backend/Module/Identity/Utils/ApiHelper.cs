@@ -11,7 +11,7 @@ namespace Identity.Utils
         public RecordAuthResponse MappingAuthResult(AccountModel result)
         {
             var roleNames = result.Roles.Select(role => role.RoleName).ToList();
-            return new RecordAuthResponse(result.AccountEmail!, result.AccountIsActive, roleNames, result.AccountCreatedAt, result.AccountUpdatedAt);
+            return new RecordAuthResponse(result.AccountId, result.AccountEmail!, result.AccountIsActive, roleNames, result.AccountCreatedAt, result.AccountUpdatedAt);
         }
 
         public RecordProfileResponse MappingProfileResult(UserProfileModel model)
