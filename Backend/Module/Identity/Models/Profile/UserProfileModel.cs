@@ -17,10 +17,7 @@ namespace Identity.Models.Profile
             UserProfileAccountId = userProfileAccountId;
             UserProfileFirstName = userProfileFirstName;
             UserProfileLastName = userProfileLastName;
-            if (userProfileDateOfBirth.HasValue)
-            {
-                UserProfileDateOfBirth = DateOnly.FromDateTime(userProfileDateOfBirth.Value);
-            }
+            UserProfileDateOfBirth =userProfileDateOfBirth;
             UserProfileGender = userProfileGender;
             UserProfilePhoneNumber = userProfilePhoneNumber;
             UserProfileAddress = userProfileAddress;
@@ -49,7 +46,7 @@ namespace Identity.Models.Profile
         [MaxLength(30)]
         public string? UserProfileLastName { get; private set; } = "";
 
-        public DateOnly? UserProfileDateOfBirth { get; private set; }
+        public DateTime? UserProfileDateOfBirth { get; private set; }
         public ESystemUserGender UserProfileGender { get; private set; }
 
         [MaxLength(10)]
@@ -87,7 +84,7 @@ namespace Identity.Models.Profile
 
         public void SetUserProfileBirthday(DateTime birthday)
         {
-            UserProfileDateOfBirth = DateOnly.FromDateTime(birthday);
+            UserProfileDateOfBirth = birthday;
             UserProfileUpdatedAt = DateTime.Now;
         }
 

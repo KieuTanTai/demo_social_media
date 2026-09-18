@@ -80,8 +80,7 @@ namespace Identity.Infrastructure.Repository.UserProfileRepository
             {
                 query = query.Where(profile => profile.UserProfileAccountId < cursor.Value);
             }
-            var dateOnlyBirthDay = DateOnly.FromDateTime(birthday);
-            query = query.Where(profile => profile.UserProfileDateOfBirth == dateOnlyBirthDay);
+            query = query.Where(profile => profile.UserProfileDateOfBirth == birthday);
             query = query.OrderByDescending(profile => profile.UserProfileId);
             var profiles = query.ToAsyncEnumerable();
             return await SharedGetApplyPagingRepository.ApplyPaging(profiles, pageSize, profile => profile.UserProfileAccountId,

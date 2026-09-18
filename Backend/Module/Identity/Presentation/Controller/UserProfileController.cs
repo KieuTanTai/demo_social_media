@@ -21,14 +21,17 @@ namespace Identity.Presentation.Controller
 
         [RequireHttps]
         [HttpGet]
-        public async Task<ActionResult<RecordProfileResponse>> GetProfileAsync<T>([Required] T id, CancellationToken cancellationToken)
+        public async Task<ActionResult<RecordProfileResponse>> GetProfileAsync([FromQuery]RecordGetProfileRequest requestDto, CancellationToken cancellationToken)
         {
-            if (id == null)
-                return BadRequest("id is required");
+            if (requestDto.IdentityCode == null && requestDto.AccountId == null)
+                return BadRequest("must have at least one id");
             try
             {
-
-                var result = await _userProfileApplication.GetProfileInfoAsync(id, cancellationToken);
+                UserProfileModel? result;
+                if (requestDto.AccountId != null)
+                    result = await _userProfileApplication.GetProfileInfoAsync(requestDto.AccountId, cancellationToken);
+                else
+                    result = await _userProfileApplication.GetProfileInfoAsync(requestDto.IdentityCode, cancellationToken);
                 var response = _apiHelper.MappingProfileResult(result);
                 return Ok(response);
             }

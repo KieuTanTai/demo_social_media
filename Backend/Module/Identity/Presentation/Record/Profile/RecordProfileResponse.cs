@@ -13,7 +13,7 @@ namespace Identity.Presentation.Record.Profile
         string? PhoneNumber = null,
         string? Address = null,
         string? AvatarUrl = null,
-        DateOnly? DateOfBirth = null,
+        DateTime? DateOfBirth = null,
         ESystemUserGender? Gender = null
         );
 }

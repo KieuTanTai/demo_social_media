@@ -15,6 +15,10 @@ VALUES ('01a051c7-348f-7dc8-9f4a-d9efcd9171e3', 'John', 'Doe', 'male', '1990-01-
 COMMIT;
        
 
+alter table user_profile
+    modify column user_profile_address varchar(255) not null default '';
+
+show columns from user_profile;
 select * from user_profile;
 select * from account;
 

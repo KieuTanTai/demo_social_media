@@ -30,7 +30,8 @@ namespace Identity.Infrastructure.DIContainer
             services.AddSingleton<IPasswordHasher<AccountModel>, PasswordHasher<AccountModel>>();
             services.AddScoped<IRoleApplication, RoleApplication>();
             services.AddScoped<IAccountApplication, AccountApplication>();
-
+            services.AddScoped<IUserProfileApplication, UserProfileApplication>();
+            
             return services;
         }
     }
