@@ -3,13 +3,13 @@ using Shared.ModelHelper;
 
 namespace Frontend.Models
 {
-    public class UserProfileViewModel(string? firstName, string? lastName, string? phoneNumber, string? avatarUrl, DateOnly? dateOfBirth, ESystemUserGender gender)
+    public class UserProfileViewModel(string? firstName, string? lastName, string? phoneNumber, string? avatarUrl, DateTime? dateOfBirth, ESystemUserGender gender)
     {
         public string? FirstName { get; private set; } = firstName;
         public string? LastName { get; private set; } = lastName;
         public string? PhoneNumber { get; private set; } = phoneNumber;
         public string? AvatarUrl { get; private set; } = avatarUrl;
-        public DateOnly? DateOfBirth { get; private set; } = dateOfBirth;
+        public DateTime? DateOfBirth { get; private set; } = dateOfBirth;
         public ESystemUserGender Gender { get; private set; } = gender;
 
         #region SET
@@ -34,7 +34,7 @@ namespace Frontend.Models
             AvatarUrl = ModelFieldGuard.Required(avatarUrl, 255, nameof(avatarUrl));
         }
 
-        public void SetDateOfBirth(DateOnly dateOfBirth)
+        public void SetDateOfBirth(DateTime dateOfBirth)
         {
             DateOfBirth = dateOfBirth;
         }

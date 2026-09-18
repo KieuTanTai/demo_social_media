@@ -2,7 +2,6 @@ using Identity.Interfaces;
 using Identity.Interfaces.IApplication;
 using Identity.Interfaces.IRepository;
 using Identity.Models.Account;
-using Identity.Models.Profile;
 using Shared.Interfaces;
 using Shared.Persistence.Record;
 
@@ -31,6 +30,27 @@ namespace Identity.Application
         private readonly IUserProfileRepository _userProfileRepository = userProfileRepository;
 
         #region USER
+
+        public async Task<AccountModel> RegisterAsync(string email, string password, CancellationToken cancellationToken = default)
+        {
+            await IsValidForRegisterAsync(email, password, cancellationToken);
+
+            var accountModel = new AccountModel(Guid.CreateVersion7(), email, password, true);
+            var hashedPassword = _accountHelper.GetPasswordHash(accountModel, password);
+            accountModel.SetHashedPassword(hashedPassword);
+
+            var baseRole = await _roleApplication.GetBaseRolesForUserAsync(cancellationToken);
+            var accountRole = new AccountRoleModel(accountModel.AccountId, baseRole.RoleId);
+            await _accountRepository.AddAsync(accountModel, cancellationToken);
+            await _accountRoleRepository.AddAsync(accountRole, cancellationToken);
+            var affectRows = await _unitOfWork.SaveChangesAsync(cancellationToken);
+            if (affectRows == 0)
+            {
+                throw new InvalidOperationException("Failed to add account.");
+            }
+            accountModel.SetRoles([baseRole]);
+            return accountModel;
+        }
 
         public async Task<AccountModel> LoginAsync(string email, string password, CancellationToken cancellationToken = default)
         {
@@ -102,33 +122,7 @@ namespace Identity.Application
         #endregion
 
         #region ADMIN
-        
-        public async Task<AccountModel> RegisterAsync(string email, string password, string identityCode, CancellationToken cancellationToken = default)
-        {
-            await IsValidForRegisterAsync(email, password, cancellationToken);
-            if (string.IsNullOrWhiteSpace(identityCode) ||  identityCode.Length != 12)
-                throw new ArgumentException("Identity code must be 12 characters long.", nameof(identityCode));
 
-            var accountModel = new AccountModel(Guid.CreateVersion7(), email, password, true);
-            var hashedPassword = _accountHelper.GetPasswordHash(accountModel, password);
-            accountModel.SetHashedPassword(hashedPassword);
-
-            var baseRole = await _roleApplication.GetBaseRolesForUserAsync(cancellationToken);
-            var accountRole = new AccountRoleModel(accountModel.AccountId, baseRole.RoleId);
-            var userProfile = new UserProfileModel(identityCode, accountModel.AccountId);
-            await _accountRepository.AddAsync(accountModel, cancellationToken);
-            await _accountRoleRepository.AddAsync(accountRole, cancellationToken);
-            await _userProfileRepository.AddAsync(userProfile,  cancellationToken);
-            var affectRows = await _unitOfWork.SaveChangesAsync(cancellationToken);
-            if (affectRows == 0)
-            {
-                throw new InvalidOperationException("Failed to add account.");
-            }
-            accountModel.SetRoles([baseRole]);
-            accountModel.SetUserProfile(userProfile);
-            return accountModel;
-        }
-        
         public async Task<int> InactiveAccountByAdminAsync(Guid accountId, CancellationToken cancellationToken = default)
         {
             var result = await _accountRepository.GetByIdAsync(accountId, cancellationToken);

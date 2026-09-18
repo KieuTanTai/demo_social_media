@@ -1,22 +1,24 @@
 -- Fresh schema for MariaDB 11.7+ (UUID_v7). Run against an empty database.
 
-CREATE DATABASE IF NOT EXISTS `ms_identity_test`
+CREATE
+DATABASE IF NOT EXISTS `ms_identity_test`
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
-USE `ms_identity_test`;
+USE
+`ms_identity_test`;
 
 CREATE TABLE `account`
 (
-    `account_id`           UUID PRIMARY KEY      DEFAULT (UUID_v7()),
-    `account_email`        VARCHAR(255) NOT NULL,
-    `account_password`     VARCHAR(255) NOT NULL,
-    `account_created_at`   TIMESTAMP             DEFAULT (NOW()),
-    `account_updated_at`   TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `account_is_active`    BOOLEAN      NOT NULL DEFAULT TRUE,
+    `account_id`         UUID PRIMARY KEY      DEFAULT (UUID_v7()),
+    `account_email`      VARCHAR(255) NOT NULL,
+    `account_password`   VARCHAR(255) NOT NULL,
+    `account_created_at` TIMESTAMP             DEFAULT (NOW()),
+    `account_updated_at` TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `account_is_active`  BOOLEAN      NOT NULL DEFAULT TRUE,
 
     UNIQUE INDEX `idx_account_email` (`account_email`),
-    INDEX `idx_account_is_active_account_id` (`account_is_active`, `account_id`)
+    INDEX                `idx_account_is_active_account_id` (`account_is_active`, `account_id`)
 ) ENGINE = InnoDB;
 
 CREATE TABLE `role`
@@ -54,7 +56,7 @@ CREATE TABLE `account_role`
     `assigned_at` TIMESTAMP DEFAULT (NOW()),
 
     PRIMARY KEY (`account_id`, `role_id`),
-    INDEX `idx_account_role_role_id` (`role_id`),
+    INDEX         `idx_account_role_role_id` (`role_id`),
 
     CONSTRAINT `fk_account_role_account`
         FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`),
@@ -69,7 +71,7 @@ CREATE TABLE `role_permission`
     `assigned_at`   TIMESTAMP DEFAULT (NOW()),
 
     PRIMARY KEY (`role_id`, `permission_id`),
-    INDEX `idx_role_permission_permission_id` (`permission_id`),
+    INDEX           `idx_role_permission_permission_id` (`permission_id`),
 
     CONSTRAINT `fk_role_permission_role`
         FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
@@ -84,7 +86,7 @@ CREATE TABLE `account_additional_permission`
     `assigned_at`   TIMESTAMP DEFAULT (NOW()),
 
     PRIMARY KEY (`account_id`, `permission_id`),
-    INDEX `idx_account_additional_permission_permission_id` (`permission_id`),
+    INDEX           `idx_account_additional_permission_permission_id` (`permission_id`),
 
     CONSTRAINT `fk_account_additional_permission_account`
         FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`),
@@ -107,14 +109,15 @@ CREATE TABLE `user_profile`
     `user_profile_updated_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     UNIQUE INDEX `idx_user_profile_account_id` (`user_profile_account_id`),
-    INDEX `idx_user_profile_phone_number` (`user_profile_phone_number`),
-    INDEX `idx_user_profile_date_of_birth` (`user_profile_date_of_birth`),
+    INDEX                         `idx_user_profile_phone_number` (`user_profile_phone_number`),
+    INDEX                         `idx_user_profile_date_of_birth` (`user_profile_date_of_birth`),
 
     CONSTRAINT `fk_user_profile_account`
         FOREIGN KEY (`user_profile_account_id`) REFERENCES `account` (`account_id`)
 ) ENGINE = InnoDB;
 
-DELIMITER //
+DELIMITER
+//
 
 CREATE TRIGGER `trigger_permission_code_immutable`
     BEFORE UPDATE
@@ -124,8 +127,9 @@ BEGIN
     IF NOT (OLD.`permission_code` <=> NEW.`permission_code`) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Permission code cannot be changed';
-    END IF;
-END //
+END IF;
+END
+//
 
 CREATE TRIGGER `trigger_role_code_immutable`
     BEFORE UPDATE
@@ -135,22 +139,25 @@ BEGIN
     IF NOT (OLD.`role_code` <=> NEW.`role_code`) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Role code cannot be changed';
-    END IF;
-END //
+END IF;
+END
+//
 
 DELIMITER ;
 
 
 alter table `user_profile` drop column `user_profile_background_url`;
 alter table `user_profile`
-    add column `user_profile_cccd` varchar(12) not null default '' after `user_profile_id`; 
+    add column `user_profile_cccd` varchar(12) not null default '' after `user_profile_id`;
 
 alter table `user_profile`
-    drop primary key , add primary key (`user_profile_cccd`),
-    drop column `user_profile_id`;
+drop
+primary key , add primary key (`user_profile_cccd`),
+    drop
+column `user_profile_id`;
 
 alter table `user_profile`
-    modify column `user_profile_cccd` varchar(12) not null unique;
+    modify column `user_profile_cccd` varchar (12) not null unique;
 
 alter table `user_profile`
     rename column `user_profile_cccd` to `user_profile_id`;

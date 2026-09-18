@@ -35,7 +35,7 @@ namespace Identity.Models.Account
             AccountIsActive = accountIsActive;
         }
 
-        public AccountModel() { }
+        public AccountModel() {}
 
         public Guid AccountId { get; init; }
 

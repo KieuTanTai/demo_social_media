@@ -2,7 +2,7 @@ namespace Identity.Models.Account
 {
     public class AccountRoleModel
     {
-        public AccountRoleModel() { }
+        public AccountRoleModel() {}
 
         public AccountRoleModel(Guid accountId, Guid roleId)
         {

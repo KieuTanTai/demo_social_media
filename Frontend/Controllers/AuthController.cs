@@ -1,17 +1,18 @@
 using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Text.Json;
 using Shared.Persistence.Record.Auth;
-using MvcJsonOptions = Microsoft.AspNetCore.Mvc.JsonOptions;
+using MvcJsonOptions=Microsoft.AspNetCore.Mvc.JsonOptions;
 
 namespace Frontend.Controllers
 {
     public class AuthController(IHttpClientFactory clientFactory, IOptions<MvcJsonOptions> jsonOptions) : Controller
     {
         private readonly IHttpClientFactory _clientFactory = clientFactory;
+
         private readonly JsonSerializerOptions _jsonSerializerOptions = jsonOptions.Value.JsonSerializerOptions;
 
         #region POST
@@ -99,6 +100,5 @@ namespace Frontend.Controllers
         }
 
         #endregion
-
     }
 }

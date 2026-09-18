@@ -17,8 +17,7 @@ namespace Identity.Infrastructure.DIContainer
             var accountRules = new AccountRulesModel();
             configuration.GetSection("AccountRules").Bind(accountRules);
 
-            services.Configure<PasswordHasherOptions>(options =>
-            {
+            services.Configure<PasswordHasherOptions>(options => {
                 options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV3;
                 options.IterationCount = configuration.GetValue<int>("PasswordHasherOptions:IterationCount");
             });
@@ -27,6 +26,7 @@ namespace Identity.Infrastructure.DIContainer
 
             services.AddSingleton(accountRules);
             services.AddSingleton<IAccountHelper, AccountHelper>();
+            services.AddSingleton<IApiHelper, ApiHelper>();
             services.AddSingleton<IPasswordHasher<AccountModel>, PasswordHasher<AccountModel>>();
             services.AddScoped<IRoleApplication, RoleApplication>();
             services.AddScoped<IAccountApplication, AccountApplication>();

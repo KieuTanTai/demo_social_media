@@ -72,7 +72,7 @@ namespace Identity.Infrastructure.Repository.UserProfileRepository
                 cancellationToken);
         }
 
-        public async Task<RecordBaseCursorPage<UserProfileModel>> GetProfileByUserBirthdayAsync(Guid? cursor, DateOnly birthday, int pageSize, CancellationToken cancellationToken = default)
+        public async Task<RecordBaseCursorPage<UserProfileModel>> GetProfileByUserBirthdayAsync(Guid? cursor, DateTime birthday, int pageSize, CancellationToken cancellationToken = default)
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(pageSize, 1);
             var query = _db.UserProfiles.AsNoTracking();
@@ -80,7 +80,8 @@ namespace Identity.Infrastructure.Repository.UserProfileRepository
             {
                 query = query.Where(profile => profile.UserProfileAccountId < cursor.Value);
             }
-            query = query.Where(profile => profile.UserProfileDateOfBirth == birthday);
+            var dateOnlyBirthDay = DateOnly.FromDateTime(birthday);
+            query = query.Where(profile => profile.UserProfileDateOfBirth == dateOnlyBirthDay);
             query = query.OrderByDescending(profile => profile.UserProfileId);
             var profiles = query.ToAsyncEnumerable();
             return await SharedGetApplyPagingRepository.ApplyPaging(profiles, pageSize, profile => profile.UserProfileAccountId,
@@ -132,7 +133,7 @@ namespace Identity.Infrastructure.Repository.UserProfileRepository
             return await SharedGetApplyPagingRepository.ApplyPaging(profiles, pageSize, profile => profile.UserProfileAccountId,
                 cancellationToken);
         }
-        
+
         public async Task<IReadOnlyList<UserProfileModel>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _db.UserProfiles.AsNoTracking().ToListAsync(cancellationToken);
@@ -141,6 +142,11 @@ namespace Identity.Infrastructure.Repository.UserProfileRepository
         public async Task<UserProfileModel?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
             return await _db.UserProfiles.AsNoTracking().FirstOrDefaultAsync(profile => profile.UserProfileId == id, cancellationToken);
+        }
+        
+        public async Task<UserProfileModel?> GetUserProfileAsync(Guid accountId, CancellationToken cancellationToken = default)
+        {
+            return await _db.UserProfiles.AsNoTracking().FirstOrDefaultAsync(profile => profile.UserProfileAccountId == accountId, cancellationToken);
         }
 
         public async Task<UserProfileModel?> GetTrackedByIdAsync(string id, CancellationToken cancellationToken = default)

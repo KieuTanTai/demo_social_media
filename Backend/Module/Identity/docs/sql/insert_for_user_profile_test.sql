@@ -1,4 +1,5 @@
-use `ms_identity_test`;
+use
+`ms_identity_test`;
 START TRANSACTION;
 
 INSERT INTO `user_profile` (`user_profile_account_id`, `user_profile_first_name`, `user_profile_last_name`,
@@ -13,3 +14,7 @@ VALUES ('01a051c7-348f-7dc8-9f4a-d9efcd9171e3', 'John', 'Doe', 'male', '1990-01-
        ('01a052fc-efb9-7ef1-b57f-029e779396de', 'Dien', 'Vy', 'unspecified', '2002-01-20', null);
 COMMIT;
        
+
+select * from user_profile;
+select * from account;
+

@@ -1,24 +1,26 @@
 using Identity.Interfaces;
 using Identity.Interfaces.IApplication;
-using Identity.Models.Account;
-using Identity.Presentation.Record;
+using Identity.Presentation.Record.Account;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Persistence.Record;
 using Shared.Persistence.Record.Auth;
 
 namespace Identity.Presentation.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController(IAccountApplication accountApplication, 
+    public class AccountController(
+        IAccountApplication accountApplication,
         IUserProfileApplication userProfileApplication,
-        IAccountHelper helper) : ControllerBase
+        IAccountHelper helper,
+        IApiHelper apiHelper) : ControllerBase
     {
         private readonly IAccountApplication _accountApplication = accountApplication;
 
-        private readonly IUserProfileApplication _userProfileApplication = userProfileApplication;
+        private readonly IApiHelper _apiHelper = apiHelper;
 
         private readonly IAccountHelper _helper = helper;
+
+        private readonly IUserProfileApplication _userProfileApplication = userProfileApplication;
 
         #region POST
 
@@ -34,23 +36,23 @@ namespace Identity.Presentation.Controller
 
             try
             {
-                var result = await _accountApplication.RegisterAsync(requestDto.Email, requestDto.Password, requestDto.IdentityCode, cancellationToken);
-                var response = MappingResult(result);
+                var result = await _accountApplication.RegisterAsync(requestDto.Email, requestDto.Password, cancellationToken);
+                var response = _apiHelper.MappingAuthResult(result);
                 return Ok(response);
             }
             catch (OperationCanceledException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"request canceled! \n {ex.Message}");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"An error occurred \n {ex.Message}");
             }
         }
 
         [RequireHttps]
         [HttpPost("login")]
-        public async Task<ActionResult<RecordAuthResponse>> LoginAsync([FromBody] RecordAuthRequest requestDto, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> LoginAsync([FromBody] RecordAuthRequest requestDto, CancellationToken cancellationToken = default)
         {
             var (isValid, errorMessage) = _helper.ValidateEmailAndPassword(requestDto.Email, requestDto.Password);
             if (!isValid)
@@ -60,16 +62,21 @@ namespace Identity.Presentation.Controller
             try
             {
                 var result = await _accountApplication.LoginAsync(requestDto.Email, requestDto.Password, cancellationToken);
-                var response = MappingResult(result);
-                return Ok(response);
+                var response = _apiHelper.MappingAuthResult(result);
+                if (result.UserProfile == null)
+                {
+                    return Ok(response);
+                }
+                var profileResponse = _apiHelper.MappingProfileResult(result.UserProfile);
+                return Ok(new { response, profileResponse }); //return both account response and profile response (applications get all of this in one req)
             }
             catch (OperationCanceledException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"request canceled! \n {ex.Message}");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"An error occurred \n {ex.Message}");
             }
         }
 
@@ -100,9 +107,13 @@ namespace Identity.Presentation.Controller
                 }
                 return Ok(result);
             }
+            catch (OperationCanceledException ex)
+            {
+                return BadRequest($"request canceled! \n {ex.Message}");
+            }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"An error occurred \n {ex.Message}");
             }
         }
 
@@ -161,22 +172,6 @@ namespace Identity.Presentation.Controller
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-        #endregion
-
-        #region PRIVATE
-
-        private static RecordAuthResponse MappingResult(AccountModel result)
-        {
-            var roleNames = result.Roles.Select(role => role.RoleName).ToList();
-            var response = new RecordAuthResponse(result.AccountEmail!, result.AccountIsActive, roleNames,
-                result.UserProfile?.UserProfileFirstName, result.UserProfile?.UserProfileLastName,
-                result.UserProfile?.UserProfileAvatarUrl, result.UserProfile?.UserProfilePhoneNumber, 
-                result.UserProfile?.UserProfileDateOfBirth, result.UserProfile!.UserProfileGender, 
-                result.AccountCreatedAt, result.AccountUpdatedAt,
-                result.UserProfile.UserProfileAddress, result.UserProfile.UserProfileId);
-            return response;
         }
 
         #endregion

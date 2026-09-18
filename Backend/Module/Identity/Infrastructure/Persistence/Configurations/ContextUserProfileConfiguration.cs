@@ -52,7 +52,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
             entity.Property(userProfile => userProfile.UserProfileAvatarUrl)
                 .HasColumnName("user_profile_avatar_url")
                 .HasMaxLength(255);
-            
+
             entity.Property(model => model.UserProfileAddress)
                 .HasColumnName("user_profile_address")
                 .HasMaxLength(255);

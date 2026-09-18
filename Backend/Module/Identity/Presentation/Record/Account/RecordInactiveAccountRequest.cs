@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Identity.Presentation.Record
+namespace Identity.Presentation.Record.Account
 {
     public record RecordInactiveAccountRequest(
         [Required]

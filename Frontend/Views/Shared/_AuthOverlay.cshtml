@@ -3,8 +3,9 @@
     var hasAuthError = !string.IsNullOrWhiteSpace(authError);
 }
 
-<div class="auth-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 @(hasAuthError ? "is-visible" : "")"
-     data-auth-overlay @(!hasAuthError ? "hidden" : "")>
+<div
+    class="auth-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 @(hasAuthError ? "is-visible" : "")"
+    data-auth-overlay @(!hasAuthError ? "hidden" : "")>
     <section class="auth-popup relative w-full max-w-md bg-(--surface) p-5 shadow-xl"
              role="dialog" aria-modal="true" aria-label="Account form">
         <button
@@ -21,12 +22,12 @@
             <label class="auth-field block">
                 <span>Email</span>
                 <input class="mt-1 h-10 w-full border px-3 text-sm outline-none ring-(--accent) focus:ring-2"
-                       type="email" name="email" autocomplete="email" />
+                       type="email" name="email" autocomplete="email"/>
             </label>
             <label class="auth-field block">
                 <span>Password</span>
                 <input class="mt-1 h-10 w-full border px-3 text-sm outline-none ring-(--accent) focus:ring-2"
-                       type="password" name="password" autocomplete="current-password" />
+                       type="password" name="password" autocomplete="current-password"/>
             </label>
             <div class="auth-message" role="alert" data-auth-message @(!hasAuthError ? "hidden" : "")>@authError</div>
             <div class="auth-links flex gap-3 text-sm">

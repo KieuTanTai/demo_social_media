@@ -17,7 +17,7 @@ namespace Identity.Utils
             var pattern = _rules.RegexForEmail;
             return !string.IsNullOrWhiteSpace(email) && Regex.IsMatch(email, pattern);
         }
-        
+
 
         public bool IsPasswordValid(string password)
         {

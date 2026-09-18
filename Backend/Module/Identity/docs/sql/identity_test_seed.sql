@@ -6,7 +6,8 @@
 --
 -- Admin is a system-level super role and therefore does NOT receive
 -- explicit rows in role_permission.
-USE `ms_identity_test`;
+USE
+`ms_identity_test`;
 START TRANSACTION;
 
 -- ============================================================

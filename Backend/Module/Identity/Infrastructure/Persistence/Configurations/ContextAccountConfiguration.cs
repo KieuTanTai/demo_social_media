@@ -57,8 +57,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
                     .OnDelete(DeleteBehavior.Restrict),
                 left => left.HasOne<AccountModel>().WithMany().HasForeignKey(account => account.AccountId)
                     .OnDelete(DeleteBehavior.Restrict),
-                join =>
-                {
+                join => {
                     join.ToTable("account_role");
                     join.HasKey(accountRole => new
                     {
@@ -83,8 +82,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
                     .OnDelete(DeleteBehavior.Restrict),
                 left => left.HasOne<AccountModel>().WithMany().HasForeignKey(account => account.AccountId)
                     .OnDelete(DeleteBehavior.Restrict),
-                join =>
-                {
+                join => {
                     join.ToTable("account_additional_permission");
                     join.HasKey(accountPermission => new
                     {

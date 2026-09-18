@@ -4,7 +4,7 @@ using Identity.Models.Profile;
 using Identity.Models.Role;
 using Microsoft.EntityFrameworkCore;
 using MySql.EntityFrameworkCore.Extensions;
-using MySqlModelBuilderExtensions =
+using MySqlModelBuilderExtensions=
     MySql.EntityFrameworkCore.Extensions.MySQLModelBuilderExtensions;
 
 namespace Identity.Infrastructure.Persistence.DBContext

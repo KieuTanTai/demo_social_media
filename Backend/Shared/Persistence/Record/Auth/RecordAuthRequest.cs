@@ -6,12 +6,8 @@ namespace Shared.Persistence.Record.Auth
         [Required]
         [EmailAddress]
         string Email,
-
         [Required]
         [DataType(DataType.Password)]
-        string Password,
-
-        [Required]
-        string IdentityCode
+        string Password
     );
 }

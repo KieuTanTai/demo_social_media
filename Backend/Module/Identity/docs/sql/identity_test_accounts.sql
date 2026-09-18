@@ -88,7 +88,8 @@ COMMIT;
 
 select *
 from `account`;
-select * from user_profile;
+select *
+from user_profile;
 select *
 from `account_role`;
 select *

@@ -54,32 +54,33 @@ CREATE TABLE `account_permission`
 
 ALTER TABLE `account`
     MODIFY COLUMN `account_password`
-        VARCHAR(255)
-        NOT NULL;
+    VARCHAR (255)
+    NOT NULL;
 
 ALTER TABLE `account`
-    DROP COLUMN `account_login_status`,
+DROP
+COLUMN `account_login_status`,
     ADD COLUMN `account_is_active` BOOLEAN NOT NULL DEFAULT TRUE;
 
 ALTER TABLE `account`
     ADD COLUMN `account_phone_number` VARCHAR(10);
 
 ALTER TABLE `role`
-    MODIFY COLUMN `role_description` VARCHAR(300);
+    MODIFY COLUMN `role_description` VARCHAR (300);
 
 ALTER TABLE `permission`
-    MODIFY COLUMN `permission_description` VARCHAR(300);
+    MODIFY COLUMN `permission_description` VARCHAR (300);
 
 ALTER TABLE `role`
     CHANGE COLUMN `role_active`
-        `role_is_active` BOOLEAN NOT NULL DEFAULT TRUE;
+    `role_is_active` BOOLEAN NOT NULL DEFAULT TRUE;
 
 ALTER TABLE `role`
-    MODIFY COLUMN `role_name` VARCHAR(150) UNIQUE NOT NULL;
+    MODIFY COLUMN `role_name` VARCHAR (150) UNIQUE NOT NULL;
 
 ALTER TABLE `permission`
     CHANGE COLUMN `permission_active`
-        `permission_is_active` BOOLEAN NOT NULL DEFAULT TRUE;
+    `permission_is_active` BOOLEAN NOT NULL DEFAULT TRUE;
 
 ALTER TABLE `account_role`
     ADD FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`);
@@ -109,7 +110,8 @@ ALTER TABLE `role`
 ALTER TABLE `permission`
     ADD UNIQUE INDEX `idx_permission_name` (`permission_name`);
 
-RENAME TABLE `account_permission`
+RENAME
+TABLE `account_permission`
     TO `account_additional_permission`;
 
 ALTER TABLE `role`
@@ -125,19 +127,30 @@ ALTER TABLE `permission`
     ADD UNIQUE INDEX `idx_permission_code` (`permission_code`);
 
 
-SHOW COLUMNS FROM account;
-SHOW COLUMNS FROM role;
-SHOW COLUMNS FROM permission;
-SHOW COLUMNS FROM account_additional_permission;
-select * from account;
-select * from role;
-select * from permission;
-select * from user_profile;
+SHOW
+COLUMNS FROM account;
+SHOW
+COLUMNS FROM role;
+SHOW
+COLUMNS FROM permission;
+SHOW
+COLUMNS FROM account_additional_permission;
+select *
+from account;
+select *
+from role;
+select *
+from permission;
+select *
+from user_profile;
 
-SHOW VARIABLES LIKE 'character_set_server';
-SHOW VARIABLES LIKE 'collation_server';
+SHOW
+VARIABLES LIKE 'character_set_server';
+SHOW
+VARIABLES LIKE 'collation_server';
 
-# TRIGGER
+#
+TRIGGER
 DELIMITER //
 CREATE TRIGGER `trigger_permission_code_immutable`
     BEFORE UPDATE
@@ -147,8 +160,9 @@ BEGIN
     IF NOT (OLD.`permission_code` <=> NEW.`permission_code`)
     THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Permission code cannot be changed';
-    END IF;
-END //
+END IF;
+END
+//
 
 CREATE TRIGGER `trigger_role_code_immutable`
     BEFORE UPDATE
@@ -158,9 +172,11 @@ BEGIN
     IF NOT (OLD.`role_code` <=> NEW.`role_code`)
     THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Role code cannot be changed';
-    END IF;
-END //
+END IF;
+END
+//
 
 DELIMITER ;
 
-SHOW TRIGGERS;
+SHOW
+TRIGGERS;
