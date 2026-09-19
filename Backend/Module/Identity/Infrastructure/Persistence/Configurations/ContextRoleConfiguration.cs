@@ -47,6 +47,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
             entity.Property(role => role.RoleCreatedAt)
                 .HasColumnName("role_created_at")
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAdd();
 
@@ -78,6 +79,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
                     rolePermission.Property(rolePerm => rolePerm.AssignedAt)
                         .HasColumnName("assigned_at")
+                        .HasColumnType("timestamp")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP")
                         .ValueGeneratedOnAdd();
                 });

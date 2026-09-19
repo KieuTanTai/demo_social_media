@@ -1,16 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MySql.EntityFrameworkCore.Extensions;
 using Premise.Models.Business;
-using Premise.Models.Intermediary;
+using Premise.Models.Premise;
 using Premise.Models.Product;
 
-
-// -------------------------------------------------------------------------- chua Xong ---------------------------------
-namespace Premise.Infrastructures.Presistence.Configuration
+namespace Premise.Infrastructures.Persistence.Configuration
 {
     public sealed class ContextBusinessTypeConfiguration : IEntityTypeConfiguration<BusinessTypeModel>
     {
         public void Configure(EntityTypeBuilder<BusinessTypeModel> entity)
         {
-            entity.toTable("business_type");
+            entity.ToTable("business_type");
 
             entity.HasKey(businessType => businessType.BusinessTypeId);
             
@@ -18,33 +19,41 @@ namespace Premise.Infrastructures.Presistence.Configuration
                   .HasColumnName("business_type_id")
                   .ValueGeneratedOnAdd();
 
-            entity.Property(businessType => businessType.Name)
+            entity.Property(businessType => businessType.BusinessTypeName)
                   .HasColumnName("business_type_name")
                   .HasMaxLength(50)
                   .IsRequired();
                 
-            entity.Property(businessType => businessType.Description)
+            entity.Property(businessType => businessType.BusinessTypeDescription)
                   .HasColumnName("business_type_description")
-                   .HasMaxLength(255);
+                  .HasMaxLength(255);
 
-            entity.Property(businessType => businessType.IsActive)
+            entity.Property(businessType => businessType.BusinessTypeIsActive)
                   .HasColumnName("business_type_is_active")
                   .HasDefaultValue(true)
                   .IsRequired();
 
-            entity.Property(businessType => businessType.CreatedAt)
+            entity.Property(businessType => businessType.BusinessTypeCreatedAt)
                 .HasColumnName("business_type_created_at")
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAdd();
 
-            entity.Property(businessType => businessType.UpdatedAt)
+            entity.Property(businessType => businessType.BusinessTypeUpdatedAt)
                 .HasColumnName("business_type_updated_at")
                 .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAddOrUpdate();
+            
+            entity.HasIndex(businessType => businessType.BusinessTypeName)
+                .IsUnique()
+                .HasDatabaseName("idx_business_type_name")
+                .HasPrefixLength(20);
 
-            entity.HasMany(businessType => businessType.Types).WithMany().UsingEntity<PremiseBusinessTypeModel>(
-                right => right.HasOne<Premise>().WithMany().HasForeignKey(premise => premise.PremiseId)
+            entity.HasMany(businessType => businessType.Premises)
+                .WithMany()
+                .UsingEntity<PremiseBusinessTypeModel>(
+                right => right.HasOne<PremiseModel>().WithMany().HasForeignKey(premise => premise.PremiseId)
                     .OnDelete(DeleteBehavior.Restrict),
                 left => left.HasOne<BusinessTypeModel>().WithMany().HasForeignKey(businessType => businessType.BusinessTypeId)
                     .OnDelete(DeleteBehavior.Restrict),
@@ -52,41 +61,56 @@ namespace Premise.Infrastructures.Presistence.Configuration
                     join.ToTable("premise_business_type");
                     join.HasKey(premiseBusinessType => new
                     {
-                        premiseBusinessType.businessTypeId,
-                        premiseBusinessType.PremiseId
+                        premiseBusinessType.PremiseId,
+                        premiseBusinessType.BusinessTypeId
                     });
 
                     join.Property(premiseBusinessType => premiseBusinessType.PremiseId)
-                        .HasColumnName("premise_id");
+                        .HasColumnName("pre_bt_premise_id")
+                        .IsRequired();
 
                     join.Property(premiseBusinessType => premiseBusinessType.BusinessTypeId)
-                        .HasColumnName("business_type_id");
+                        .HasColumnName("pre_bt_business_type_id")
+                        .IsRequired();
 
-                });
-
-
-            // ------------------------------------- chua xong--------------------------------------------
-            entity.HasMany(businessType => businessType.ProductBusinessTypes).WithMany().UsingEntity<ProductBusinessTypeModel>(
-                right => right.HasOne<WhitelistProductModel>().WithMany().HasForeignKey(productBusinessType => productBusinessType.ProductId)
-                    .OnDelete(DeleteBehavior.Restrict),
-                left => left.HasOne<BusinessTypeModel>().WithMany().HasForeignKey(productBusinessType => productBusinessType.BusinessTypeId)
-                    .OnDelete(DeleteBehavior.Restrict),
-                join => {
-                    join.ToTable("product_business_type");
-                    join.HasKey(productBusinessType => new
-                    {
-                        productBusinessType.ProductId,
-                        productBusinessType.BusinessTypeId
-                    });
-
-                    join.Property(productBusinessType => productBusinessType.ProductId)
-                        .HasColumnName("whitelist_product_id");
-
-                    join.Property(productBusinessType => productBusinessType.BusinessTypeId)
-                        .HasColumnName("business_type_id");
+                    join.Property(premiseBusinessType => premiseBusinessType.AssignedAt)
+                        .HasColumnName("pre_bt_assigned_at")
+                        .HasColumnType("timestamp")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                        .ValueGeneratedOnAdd();
                 }
             );
 
+            entity.HasMany(businessType => businessType.WhitelistProducts)
+                .WithMany()
+                .UsingEntity<ProductBusinessTypeModel>(
+                right => right.HasOne<WhitelistProductModel>().WithMany().HasForeignKey(whitelistProduct => whitelistProduct.ProductId)
+                    .OnDelete(DeleteBehavior.Restrict),
+                left => left.HasOne<BusinessTypeModel>().WithMany().HasForeignKey(businessType => businessType.BusinessTypeId)
+                    .OnDelete(DeleteBehavior.Restrict),
+                join => {
+                    join.ToTable("product_business_type");
+                    join.HasKey(businessTypeWhitelistProduct => new
+                    {
+                        businessTypeWhitelistProduct.ProductId,
+                        businessTypeWhitelistProduct.BusinessTypeId
+                    });
+                    
+                    join.Property(businessTypeWhitelistProduct => businessTypeWhitelistProduct.ProductId)
+                        .HasColumnName("pbt_product_id")
+                        .IsRequired();
+                    
+                    join.Property(businessTypeWhitelistProduct => businessTypeWhitelistProduct.BusinessTypeId)
+                        .HasColumnName("pbt_business_type_id")
+                        .IsRequired();
+
+                    join.Property(businessTypeWhitelistProduct => businessTypeWhitelistProduct.AssignedAt)
+                        .HasColumnName("pbt_assigned_at")
+                        .HasColumnType("timestamp")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                        .ValueGeneratedOnAdd();
+                }
+            );
         }
     }
 }

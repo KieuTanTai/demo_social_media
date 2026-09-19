@@ -8,6 +8,15 @@ namespace Identity.Models.Account
 {
     public class AccountModel
     {
+        public AccountModel(string accountEmail, string password, bool accountIsActive, bool isManualGenerateId = false)
+        {
+            if (isManualGenerateId)
+                AccountId = Guid.CreateVersion7();
+            AccountEmail = ModelFieldGuard.Required(accountEmail, 255, nameof(accountEmail));
+            AccountPassword = ModelFieldGuard.Required(password, 255, nameof(password));
+            AccountIsActive = accountIsActive;
+        }
+        
         public AccountModel(string email, string password)
         {
             AccountEmail = ModelFieldGuard.Required(email, 255, nameof(email));

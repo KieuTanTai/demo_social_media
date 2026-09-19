@@ -1,6 +1,7 @@
-using Backend.Module.TicketAndNotification.Utils.Enum;
+using System.ComponentModel.DataAnnotations;
+using TicketAndNotification.Utils.Enum;
 
-namespace Backend.Module.TicketAndNotification.Models.Ticket
+namespace TicketAndNotification.Models.Ticket
 {
     public class TicketModel
 {
@@ -8,21 +9,16 @@ namespace Backend.Module.TicketAndNotification.Models.Ticket
 
     public Guid AccountId { get; set; }
 
-    public string Content { get; set; } = null!;
+    [Required, MaxLength(255)] public string Content { get; set; } = string.Empty;
 
     public ETicketType Type { get; set; }
         = ETicketType.Feedback;
 
-    public ETicketStatus Status { get; set; }
-        = ETicketStatus.Received;
+    public bool IsResolved { get; set; }
 
     public DateTime CreatedDate { get; set; }
 
     public DateTime UpdatedDate { get; set; }
 
-
-    // Navigation
-    public ICollection<TicketMediaModel> TicketMedias { get; set; }
-        = new List<TicketMediaModel>();
 }
 }

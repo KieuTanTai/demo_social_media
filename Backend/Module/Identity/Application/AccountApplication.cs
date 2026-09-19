@@ -35,7 +35,7 @@ namespace Identity.Application
         {
             await IsValidForRegisterAsync(email, password, cancellationToken);
 
-            var accountModel = new AccountModel(Guid.CreateVersion7(), email, password, true);
+            var accountModel = new AccountModel(email, password, true, true);
             var hashedPassword = _accountHelper.GetPasswordHash(accountModel, password);
             accountModel.SetHashedPassword(hashedPassword);
 

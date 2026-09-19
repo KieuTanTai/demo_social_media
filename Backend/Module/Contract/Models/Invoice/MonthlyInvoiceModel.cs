@@ -1,6 +1,6 @@
-using Backend.Module.Contract.Models.Contract;
+using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Module.Contract.Models.Invoice
+namespace Contract.Models.Invoice
 {
     public class MonthlyInvoiceModel
     {
@@ -8,17 +8,17 @@ namespace Backend.Module.Contract.Models.Invoice
 
         public Guid ContractId { get; set; }
 
-        public DateTime PaymentDate { get; set; }
+        public DateTime? PaymentDate { get; set; }
+
+        public DateTime? DueDate { get; set; }
+
+        public decimal? TotalAmount { get; set; }
+
+        [Required, MaxLength(10)] public string Status { get; set; } = "unpaid";
 
         public DateTime CreatedDate { get; set; }
 
         public DateTime UpdatedDate { get; set; }
 
-
-        // Navigation
-        public ContractModel Contract { get; set; } = null!;
-
-        public ICollection<InvoiceDetailModel> InvoiceDetails { get; set; }
-            = new List<InvoiceDetailModel>();
     }
 }

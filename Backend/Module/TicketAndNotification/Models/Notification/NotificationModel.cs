@@ -1,6 +1,6 @@
-using Backend.Module.TicketAndNotification.Utils.Enum;
+using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Module.TicketAndNotification.Models.Notification
+namespace TicketAndNotification.Models.Notification
 {
     public class Notification
     {
@@ -8,15 +8,12 @@ namespace Backend.Module.TicketAndNotification.Models.Notification
 
         public Guid SenderAccountId { get; set; }
 
-        public string ReceiverAccountIds { get; set; } = null!;
+        public TicketAndNotification.Utils.Enum.ENotificationType Type { get; set; }
+            = TicketAndNotification.Utils.Enum.ENotificationType.Other;
 
-        public ENotificationType Type { get; set; }
-            = ENotificationType.Other;
+        [Required, MaxLength(255)] public string Content { get; set; } = string.Empty;
 
-        public string Content { get; set; } = null!;
-
-        public ENotificationStatus Status { get; set; }
-            = ENotificationStatus.Unread;
+        public bool IsRead { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

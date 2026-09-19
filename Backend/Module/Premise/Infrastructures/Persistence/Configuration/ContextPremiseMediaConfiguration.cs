@@ -1,12 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Premise.Models.Premise;
 
-namespace Premise.Infrastructures.Presistence.Configuration
+namespace Premise.Infrastructures.Persistence.Configuration
 {
     public sealed class ContextPremiseMediaConfiguration : IEntityTypeConfiguration<PremiseMediaModel>
     {
         public void Configure(EntityTypeBuilder<PremiseMediaModel> entity)
         {
-            entity.toTable("premise_media");
+            entity.ToTable("premise_media");
 
             entity.HasKey(premiseMedia => premiseMedia.PremiseMediaId);
             
@@ -14,18 +16,28 @@ namespace Premise.Infrastructures.Presistence.Configuration
                   .HasColumnName("premise_media_id")
                   .ValueGeneratedOnAdd();
 
-            entity.Property(premiseMedia => premiseMedia.Image)
-                  .HasColumnName("premise_media_image")
+            entity.Property(premiseMedia => premiseMedia.PremiseMediaPremiseId)
+                .HasColumnName("premise_media_premise_id")
+                .IsRequired();
+            
+            entity.Property(premiseMedia => premiseMedia.PremiseMediaImageUrl)
+                  .HasColumnName("premise_media_image_url")
                   .HasConversion<string>()
                   .IsRequired();
+            
+            entity.Property(premiseMedia => premiseMedia.PremiseMediaCreatedAt)
+                .HasColumnName("premise_media_created_at")
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            entity.Property(premiseMedia => premiseMedia.PremiseId)
-                  .HasColumnName("premise_id")
-                  .IsRequired();
-
+            entity.Property(premiseMedia => premiseMedia.PremiseMediaUpdatedAt)
+                .HasColumnName("premise_media_updated_at")
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
             entity.HasOne<PremiseModel>()
                 .WithMany()
-                .HasForeignKey(premiseMedia => premiseMedia.PremiseId)
+                .HasForeignKey(premiseMedia => premiseMedia.PremiseMediaPremiseId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

@@ -1,14 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using MySql.EntityFrameworkCore.Extensions;
 using Premise.Models.Business;
-using Premise.Models.Intermediary;
 using Premise.Models.Premise;
 using Premise.Models.Product;
+using MySqlModelBuilderExtensions=
+    MySql.EntityFrameworkCore.Extensions.MySQLModelBuilderExtensions;
 
-namespace Premise.Infrastructures.Presistence.DBContext
+namespace Premise.Infrastructures.Persistence.DBContext
 {
     public sealed class PremiseDbContext(DbContextOptions<PremiseDbContext> contextOptions) 
-        : DBContext(contextOptions)
+        : DbContext(contextOptions)
     {
         public DbSet<PremiseModel> Premises {get; set;}
         public DbSet<LocationModel> Locations {get; set;}

@@ -1,17 +1,19 @@
-using Backend.Module.Premise.Models.Business;
-
-namespace Backend.Module.Premise.Models.Product
+namespace Premise.Models.Product
 {
     public class ProductBusinessTypeModel
-{
-    public Guid ProductId { get; set; }
+    {
+        public ProductBusinessTypeModel() {}
 
-    public Guid BusinessTypeId { get; set; }
+        public ProductBusinessTypeModel(Guid productId, Guid businessTypeId)
+        {
+            ProductId = productId;
+            BusinessTypeId = businessTypeId;
+        }
 
+        public Guid ProductId { get; init; }
 
-    // Navigation
-    public WhitelistProductModel Product { get; set; } = null!;
-
-    public BusinessTypeModel BusinessType { get; set; } = null!;
-}
+        public Guid BusinessTypeId { get; init; }
+        
+        public DateTime AssignedAt { get; init; } = DateTime.Now;
+    }
 }

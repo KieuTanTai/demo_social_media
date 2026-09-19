@@ -1,22 +1,68 @@
-using Backend.Module.Premise.Models.Business;
+using System.ComponentModel.DataAnnotations;
+using Shared.ModelHelper;
 
-namespace Backend.Module.Premise.Models.Product
+namespace Premise.Models.Product
 {
     public class WhitelistProductModel
-{
-    public Guid ProductId { get; set; }
+    {
+        public WhitelistProductModel(string whitelistProductName)
+        {
+            WhitelistProductName = ModelFieldGuard.Required(
+                whitelistProductName,
+                100,
+                nameof(whitelistProductName));
+        }
 
-    public string Name { get; set; } = null!;
+        public WhitelistProductModel(
+            Guid whitelistProductId,
+            string whitelistProductName,
+            string? whitelistProductDescription)
+        {
+            WhitelistProductId = whitelistProductId;
+            WhitelistProductName = ModelFieldGuard.Required(
+                whitelistProductName,
+                100,
+                nameof(whitelistProductName));
+            WhitelistProductDescription = whitelistProductDescription;
+        }
 
-    public string? Description { get; set; }
+        public WhitelistProductModel() {}
 
-    public DateTime CreatedDate { get; set; }
+        public Guid WhitelistProductId { get; init; }
 
-    public DateTime UpdatedDate { get; set; }
+        [MaxLength(100)] public string WhitelistProductName { get; private set; } = string.Empty;
 
+        [MaxLength(255)] public string? WhitelistProductDescription { get; private set; }
 
-    // Navigation
-    public ICollection<ProductBusinessTypeModel> ProductBusinessTypes { get; set; }
-        = new List<ProductBusinessTypeModel>();
-}
+        public DateTime WhitelistProductCreatedAt { get; init; } = DateTime.Now;
+
+        public DateTime WhitelistProductUpdatedAt { get; private set; } = DateTime.Now;
+
+        #region Setter
+
+        public void SetWhitelistProductName(string name)
+        {
+            WhitelistProductName = ModelFieldGuard.Required(name, 100, nameof(name));
+            WhitelistProductUpdatedAt = DateTime.Now;
+        }
+
+        public void ClearWhitelistProductDescription()
+        {
+            if (WhitelistProductDescription is null)
+            {
+                return;
+            }
+
+            WhitelistProductDescription = null;
+            WhitelistProductUpdatedAt = DateTime.Now;
+        }
+
+        public void SetWhitelistProductDescription(string description)
+        {
+            WhitelistProductDescription = ModelFieldGuard.Required(description, 255, nameof(description));
+            WhitelistProductUpdatedAt = DateTime.Now;
+        }
+
+        #endregion
+    }
 }

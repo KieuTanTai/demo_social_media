@@ -1,33 +1,93 @@
-using Backend.Module.Premise.Models.Premise;
-using Backend.Module.Premise.Models.Product;
+using System.ComponentModel.DataAnnotations;
+using Premise.Models.Premise;
+using Premise.Models.Product;
+using Shared.ModelHelper;
 
-namespace Backend.Module.Premise.Models.Business
+namespace Premise.Models.Business
 {
     public class BusinessTypeModel
     {
-        public Guid BusinessTypeId { get; set; }
+        public BusinessTypeModel(string businessTypeName)
+        {
+            BusinessTypeName = ModelFieldGuard.Required(businessTypeName, 50, nameof(businessTypeName));
+        }
 
-        public string Name { get; set; } = null!;
+        public BusinessTypeModel(
+            Guid businessTypeId,
+            string businessTypeName,
+            string? businessTypeDescription,
+            bool businessTypeIsActive)
+        {
+            BusinessTypeId = businessTypeId;
+            BusinessTypeName = ModelFieldGuard.Required(businessTypeName, 50, nameof(businessTypeName));
+            BusinessTypeDescription = businessTypeDescription;
+            BusinessTypeIsActive = businessTypeIsActive;
+        }
 
-        public string? Description { get; set; }
+        public BusinessTypeModel() {}
 
-        public bool IsActive { get; set; } = true;
+        public Guid BusinessTypeId { get; init; }
 
-        public DateTime CreatedDate { get; set; }
+        [MaxLength(50)] public string BusinessTypeName { get; private set; } = string.Empty;
 
-        public DateTime UpdatedDate { get; set; }
+        [MaxLength(255)] public string? BusinessTypeDescription { get; private set; }
 
+        public bool BusinessTypeIsActive { get; private set; } = true;
+
+        public DateTime BusinessTypeCreatedAt { get; init; } = DateTime.Now;
+
+        public DateTime BusinessTypeUpdatedAt { get; private set; } = DateTime.Now;
+
+        public IReadOnlyList<PremiseModel> Premises { get; private set; } = new List<PremiseModel>();
         
-
-
-        // Navigation
-        public ICollection<PremiseBusinessTypeModel> PremiseBusinessTypes { get; set; }
-            = new List<PremiseBusinessTypeModel>();
-
-        public ICollection<ProductBusinessTypeModel> ProductBusinessTypes { get; set; }
-            = new List<ProductBusinessTypeModel>();
-
+        public IReadOnlyList<WhitelistProductModel> WhitelistProducts { get; private set; } = new List<WhitelistProductModel>();
         
+        #region Setter
+
+        public void SetBusinessTypeName(string name)
+        {
+            BusinessTypeName = ModelFieldGuard.Required(name, 50, nameof(name));
+            BusinessTypeUpdatedAt = DateTime.Now;
+        }
+
+        public void ClearBusinessTypeDescription()
+        {
+            if (BusinessTypeDescription is null)
+            {
+                return;
+            }
+
+            BusinessTypeDescription = null;
+            BusinessTypeUpdatedAt = DateTime.Now;
+        }
+
+        public void SetBusinessTypeDescription(string description)
+        {
+            BusinessTypeDescription = ModelFieldGuard.Required(description, 255, nameof(description));
+            BusinessTypeUpdatedAt = DateTime.Now;
+        }
+
+        public void SetBusinessTypeIsActive(bool isActive)
+        {
+            if (BusinessTypeIsActive == isActive)
+            {
+                return;
+            }
+
+            BusinessTypeIsActive = isActive;
+            BusinessTypeUpdatedAt = DateTime.Now;
+        }
+
+        public void SetPremises(IReadOnlyList<PremiseModel> premises)
+        {
+            Premises = premises;
+        }
+
+        public void SetWhitelistProducts(IReadOnlyList<WhitelistProductModel> whitelistProducts)
+        {
+            WhitelistProducts = whitelistProducts;
+        }
+
+        #endregion
     }
-
 }

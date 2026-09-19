@@ -1,6 +1,6 @@
-using Backend.Module.Contract.Utils.Enum;
+using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Module.Contract.Models.Contract
+namespace Contract.Models.Contract
 {
     public class ContractViolationModel
     {
@@ -8,17 +8,15 @@ namespace Backend.Module.Contract.Models.Contract
 
         public Guid ContractId { get; set; }
 
-        public string ViolationContent { get; set; } = null!;
+        [Required, MaxLength(150)] public string ViolationContent { get; set; } = string.Empty;
 
         public decimal? CompensationAmount { get; set; }
 
-        public DateTime ViolationDate { get; set; }
+        public DateTime? ViolationDate { get; set; }
 
-        public EViolationStatus Status { get; set; }
-            = EViolationStatus.WaitingConfirmation;
+        public DateTime? DueDate { get; set; }
 
+        public bool IsResolved { get; set; }
 
-        // Navigation
-        public ContractModel Contract { get; set; } = null!;
     }
 }

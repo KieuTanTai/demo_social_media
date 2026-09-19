@@ -1,26 +1,27 @@
-using Premise.Models.Intermediary;
+using Contract.Models.Contract;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Premise.Models.Premise;
 
-namespace Premise.Infrastructures.Presistence.Configuration
+namespace Premise.Infrastructures.Persistence.Configuration
 {
-    public sealed class ContextContractAndPremiseIntermediaryConfiguration : IEntityTypeConfiguration<RentedPremiseModel>
+    public sealed class ContextRentedPremiseConfiguration : IEntityTypeConfiguration<RentedPremiseModel>
     {
         public void Configure(EntityTypeBuilder<RentedPremiseModel> entity)
         {
-            entity.toTable("rented_premise");
+            entity.ToTable("rented_premise");
 
             entity.HasKey(rentedPremise => new {
                 rentedPremise.ContractId,
                 rentedPremise.PremiseId,
             });
-            
+
             entity.Property(rentedPremise => rentedPremise.ContractId)
-                  .HasColumnName("rentedPremise_id")
-                  .ValueGeneratedOnAdd();
+                .HasColumnName("rented_premise_contract_id")
+                .IsRequired();
 
             entity.Property(rentedPremise => rentedPremise.PremiseId)
-                  .HasColumnName("rentedPremise_address")
-                  .HasConversion<string>()
+                  .HasColumnName("rented_premise_premise_id")
                   .IsRequired();
 
             entity.HasOne<PremiseModel>()

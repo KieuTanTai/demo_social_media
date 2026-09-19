@@ -1,27 +1,34 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Premise.Models.Business;
 using Premise.Models.Product;
 
-namespace Premise.Infrastructures.Presistence.Configuration
+namespace Premise.Infrastructures.Persistence.Configuration
 {
     public sealed class ContextProductBusinessTypeModelConfiguration : IEntityTypeConfiguration<ProductBusinessTypeModel>
     {
         public void Configure(EntityTypeBuilder<ProductBusinessTypeModel> entity)
         {
-            entity.toTable("product_business_type");
+            entity.ToTable("product_business_type");
 
             entity.HasKey(productBusinessType => new{
                 productBusinessType.ProductId,
                 productBusinessType.BusinessTypeId
             });
-            
+
             entity.Property(productBusinessType => productBusinessType.ProductId)
-                  .HasColumnName("product_id")
-                  .ValueGeneratedOnAdd();
+                .HasColumnName("pbt_product_id")
+                .IsRequired();
 
             entity.Property(productBusinessType => productBusinessType.BusinessTypeId)
-                  .HasColumnName("product_business_type_id")
-                  .HasMaxLength(50)
+                  .HasColumnName("pbt_business_type_id")
                   .IsRequired();
+            
+            entity.Property(productBusinessType => productBusinessType.AssignedAt)
+                .HasColumnName("pbt_assigned_at")
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAdd();
 
             entity.HasOne<WhitelistProductModel>()
                   .WithMany()

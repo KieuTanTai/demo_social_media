@@ -1,9 +1,9 @@
-namespace Backend.Module.Premise.Utils.Enum
+namespace Shared.Enum
 {
     public enum EPremiseStatus
     {
         Rented,
         Available,
-        UnderMaintenance
+        Maintenance,
     }
 }

@@ -1,17 +1,12 @@
 using Identity.Infrastructure.DIContainer;
 using Identity.Infrastructure.Persistence.DBContext;
-using Identity.Interfaces;
 using Identity.Interfaces.IRepository;
 using Identity.Models.Account;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Utils
 {
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Identity.Utils
+    namespace Identity.Utils
 {
     public static class HashExistingAccounts
     {

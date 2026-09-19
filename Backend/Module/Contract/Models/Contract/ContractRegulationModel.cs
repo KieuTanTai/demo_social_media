@@ -1,4 +1,4 @@
-namespace Backend.Module.Contract.Models.Contract
+namespace Contract.Models.Contract
 {
     public class ContractRegulationModel
     {
@@ -6,10 +6,5 @@ namespace Backend.Module.Contract.Models.Contract
 
         public Guid ContractId { get; set; }
 
-
-        // Navigation
-        public RegulationModel Regulation { get; set; } = null!;
-
-        public ContractModel Contract { get; set; } = null!;
     }
 }

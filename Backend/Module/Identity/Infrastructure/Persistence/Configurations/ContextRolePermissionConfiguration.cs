@@ -28,6 +28,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
             entity.Property(rolePermission => rolePermission.AssignedAt)
                 .HasColumnName("assigned_at")
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAdd();
 

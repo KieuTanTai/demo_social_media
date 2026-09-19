@@ -1,8 +1,6 @@
-using Backend.Module.Contract.Utils.Enum;
-using Backend.Module.Contract.Models.Contract;
-using Backend.Module.Contract.Models.Invoice;
+using Contract.Utils.Enum;
 
-namespace Backend.Module.Contract.Models.Contract
+namespace Contract.Models.Contract
 {
     public class ContractModel
     {
@@ -26,15 +24,5 @@ namespace Backend.Module.Contract.Models.Contract
         public DateTime UpdatedDate { get; set; }
 
 
-        // Navigation
-
-        public ICollection<ContractRegulationModel> ContractRegulations { get; set; }
-            = new List<ContractRegulationModel>();
-
-        public ICollection<ContractViolationModel> ContractViolations { get; set; }
-            = new List<ContractViolationModel>();
-
-        public ICollection<MonthlyInvoiceModel> MonthlyInvoices { get; set; }
-            = new List<MonthlyInvoiceModel>();
     }
 }

@@ -59,6 +59,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
             entity.Property(userProfile => userProfile.UserProfileCreatedAt)
                 .HasColumnName("user_profile_created_at")
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAdd();
 

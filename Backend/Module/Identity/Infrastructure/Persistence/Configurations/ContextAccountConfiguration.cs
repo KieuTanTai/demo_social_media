@@ -43,6 +43,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
             entity.Property(account => account.AccountCreatedAt)
                 .HasColumnName("account_created_at")
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAdd();
 
@@ -73,6 +74,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
                     join.Property(accountRole => accountRole.AssignedAt)
                         .HasColumnName("assigned_at")
+                        .HasColumnType("timestamp")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP")
                         .ValueGeneratedOnAdd();
                 });
@@ -98,6 +100,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
                     join.Property(accountPermission => accountPermission.AssignedAt)
                         .HasColumnName("assigned_at")
+                        .HasColumnType("timestamp")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP")
                         .ValueGeneratedOnAdd();
                 });

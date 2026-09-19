@@ -1,43 +1,181 @@
-using Backend.Module.Premise.Models.Intermediary;
-using Backend.Module.Premise.Utils.Enum;
+using System.ComponentModel.DataAnnotations;
+using Premise.Models.Business;
+using Shared.Enum;
+using Shared.ModelHelper;
 
-namespace Backend.Module.Premise.Models.Premise
+namespace Premise.Models.Premise
 {
     public class PremiseModel
     {
-        public Guid PremiseId { get; set; }
+        public PremiseModel(string premiseName, Guid premiseLocationId)
+        {
+            PremiseName = ModelFieldGuard.Required(premiseName, 50, nameof(premiseName));
+            PremiseLocationId = premiseLocationId;
+        }
 
-        public string Name { get; set; } = null!;
+        public PremiseModel(
+            string premiseName,
+            Guid premiseLocationId,
+            EPremiseStatus premiseStatus,
+            int premisePosition,
+            int premiseFloor,
+            string premiseArea,
+            string? premiseDescription)
+        {
+            PremiseName = ModelFieldGuard.Required(premiseName, 50, nameof(premiseName));
+            PremiseLocationId = premiseLocationId;
+            PremiseStatus = premiseStatus;
+            PremisePosition = premisePosition;
+            PremiseFloor = premiseFloor;
+            PremiseArea = premiseArea;
+            PremiseDescription = premiseDescription;
+        }
 
-        public Guid LocationId { get; set; }
+        public PremiseModel(
+            Guid premiseId,
+            string? premiseName,
+            Guid premiseLocationId,
+            EPremiseStatus premiseStatus,
+            int premisePosition,
+            int premiseFloor,
+            string premiseArea,
+            string? premiseDescription)
+        {
+            PremiseId = premiseId;
+            PremiseName = ModelFieldGuard.Required(premiseName, 50, nameof(premiseName));
+            PremiseLocationId = premiseLocationId;
+            PremiseStatus = premiseStatus;
+            PremisePosition = premisePosition;
+            PremiseFloor = premiseFloor;
+            PremiseArea = premiseArea;
+            PremiseDescription = premiseDescription;
+        }
 
-        public EPremiseStatus Status { get; set; }
-            = EPremiseStatus.Available;
+        public PremiseModel() {}
 
-        public int Position { get; set; }
+        public Guid PremiseId { get; init; }
 
-        public int Floor { get; set; }
+        [MaxLength(50)] public string PremiseName { get; private set; } = string.Empty;
 
-        public decimal Area { get; set; }
+        public Guid PremiseLocationId { get; private set; }
 
-        public string? Description { get; set; }
+        public EPremiseStatus PremiseStatus { get; private set; } = EPremiseStatus.Available;
 
-        public DateTime CreatedDate { get; set; }
+        public int PremisePosition { get; private set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public int PremiseFloor { get; private set; }
 
+        [MaxLength(10)] public string PremiseArea { get; private set; } = string.Empty;
 
-        // Navigation
-        public LocationModel Location { get; set; } = null!;
+        [MaxLength(100)] public string? PremiseDescription { get; private set; }
 
-        public ICollection<PremiseBusinessTypeModel> PremiseBusinessTypes { get; set; }
-            = new List<PremiseBusinessTypeModel>();
+        public DateTime PremiseCreatedAt { get; init; } = DateTime.Now;
 
-        public ICollection<RentedPremiseModel> RentedPremises { get; set; }
-            = new List<RentedPremiseModel>();
+        public DateTime PremiseUpdatedAt { get; private set; } = DateTime.Now;
+        
+        public LocationModel? PremiseLocation { get; private set; }
+        
+        public IReadOnlyList<PremiseMediaModel> PremiseMedia { get; private set; } = new List<PremiseMediaModel>();
+        
+        public IReadOnlyList<BusinessTypeModel> PremiseBusinessTypes { get; private set; } = new List<BusinessTypeModel>();
+        
 
-        public ICollection<PremiseMediaModel> Media { get; set; }
-            = new List<PremiseMediaModel>();
+        #region Setter
 
+        public void SetPremiseName(string name)
+        {
+            PremiseName = ModelFieldGuard.Required(name, 50, nameof(name));
+            PremiseUpdatedAt = DateTime.Now;
+        }
+
+        public void SetPremiseLocationId(Guid locationId)
+        {
+            if (PremiseLocationId == locationId)
+            {
+                return;
+            }
+
+            PremiseLocationId = locationId;
+            PremiseUpdatedAt = DateTime.Now;
+        }
+
+        public void SetPremiseStatus(EPremiseStatus status)
+        {
+            if (PremiseStatus == status)
+            {
+                return;
+            }
+
+            PremiseStatus = status;
+            PremiseUpdatedAt = DateTime.Now;
+        }
+
+        public void SetPremisePosition(int premisePosition)
+        {
+            if (PremisePosition == premisePosition)
+            {
+                return;
+            }
+
+            PremisePosition = premisePosition;
+            PremiseUpdatedAt = DateTime.Now;
+        }
+
+        public void SetPremiseFloor(int floor)
+        {
+            if (PremiseFloor == floor)
+            {
+                return;
+            }
+
+            PremiseFloor = floor;
+            PremiseUpdatedAt = DateTime.Now;
+        }
+
+        public void ClearPremiseArea()
+        {
+            PremiseArea = string.Empty;
+            PremiseUpdatedAt = DateTime.Now;
+        }
+
+        public void SetPremiseArea(string area)
+        {
+            PremiseArea = ModelFieldGuard.Required(area, 10, nameof(area));
+            PremiseUpdatedAt = DateTime.Now;
+        }
+
+        public void ClearPremiseDescription()
+        {
+            if (PremiseDescription is null)
+            {
+                return;
+            }
+
+            PremiseDescription = null;
+            PremiseUpdatedAt = DateTime.Now;
+        }
+
+        public void SetPremiseDescription(string description)
+        {
+            PremiseDescription = ModelFieldGuard.Required(description, 100, nameof(description));
+            PremiseUpdatedAt = DateTime.Now;
+        }
+
+        public void SetPremiseBusinessTypes(IReadOnlyList<BusinessTypeModel> businessTypes)
+        {
+            PremiseBusinessTypes = businessTypes;
+        }
+
+        public void SetPremiseMedia(IReadOnlyList<PremiseMediaModel> premiseMedia)
+        {
+            PremiseMedia = premiseMedia;
+        }
+
+        public void SetPremiseLocation(LocationModel location)
+        {
+            PremiseLocation = location;
+        }
+        
+        #endregion
     }
 }

@@ -41,6 +41,7 @@ namespace Identity.Infrastructure.Persistence.Configurations
 
             entity.Property(permission => permission.PermissionCreatedAt)
                 .HasColumnName("permission_created_at")
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAdd();
 

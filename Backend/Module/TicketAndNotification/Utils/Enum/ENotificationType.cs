@@ -1,4 +1,4 @@
-namespace Backend.Module.TicketAndNotification.Utils.Enum
+namespace TicketAndNotification.Utils.Enum
 {
     public enum ENotificationType
     {

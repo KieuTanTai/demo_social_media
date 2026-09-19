@@ -1,4 +1,4 @@
-namespace Backend.Module.Contract.Utils.Enum
+namespace Contract.Utils.Enum
 {
     public enum EContractStatus
     {

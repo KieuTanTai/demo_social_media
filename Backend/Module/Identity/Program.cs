@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using Identity.Infrastructure.DIContainer;
-using Identity.Utils.Identity.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
