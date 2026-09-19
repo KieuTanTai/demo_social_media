@@ -96,17 +96,17 @@ CREATE TABLE `account_additional_permission`
 
 CREATE TABLE `user_profile`
 (
-    `user_profile_id`             INT PRIMARY KEY AUTO_INCREMENT,
-    `user_profile_account_id`     UUID NOT NULL,
-    `user_profile_first_name`     VARCHAR(30),
-    `user_profile_last_name`      VARCHAR(30),
-    `user_profile_date_of_birth`  DATE,
-    `user_profile_gender`         ENUM ('male', 'female', 'unspecified') NOT NULL DEFAULT 'unspecified',
-    `user_profile_phone_number`   VARCHAR(10),
-    `user_profile_avatar_url`     VARCHAR(255),
-    `user_profile_background_url` VARCHAR(255),
-    `user_profile_created_at`     TIMESTAMP DEFAULT (NOW()),
-    `user_profile_updated_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `user_profile_id`            VARCHAR(12) NOT NULL PRIMARY KEY,
+    `user_profile_account_id`    UUID NOT NULL,
+    `user_profile_first_name`    VARCHAR(30),
+    `user_profile_last_name`     VARCHAR(30),
+    `user_profile_date_of_birth` DATE,
+    `user_profile_gender`        ENUM ('male', 'female', 'unspecified') NOT NULL DEFAULT 'unspecified',
+    `user_profile_phone_number`  VARCHAR(10),
+    `user_profile_address`       VARCHAR(255) NOT NULL DEFAULT '',
+    `user_profile_avatar_url`    VARCHAR(255),
+    `user_profile_created_at`    TIMESTAMP DEFAULT (NOW()),
+    `user_profile_updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     UNIQUE INDEX `idx_user_profile_account_id` (`user_profile_account_id`),
     INDEX                         `idx_user_profile_phone_number` (`user_profile_phone_number`),
@@ -144,23 +144,3 @@ END
 //
 
 DELIMITER ;
-
-
-alter table `user_profile` drop column `user_profile_background_url`;
-alter table `user_profile`
-    add column `user_profile_cccd` varchar(12) not null default '' after `user_profile_id`;
-
-alter table `user_profile`
-drop
-primary key , add primary key (`user_profile_cccd`),
-    drop
-column `user_profile_id`;
-
-alter table `user_profile`
-    modify column `user_profile_cccd` varchar (12) not null unique;
-
-alter table `user_profile`
-    rename column `user_profile_cccd` to `user_profile_id`;
-
-alter table `user_profile`
-    add column `user_profile_address` varchar(255) not null default '' after `user_profile_phone_number`;
