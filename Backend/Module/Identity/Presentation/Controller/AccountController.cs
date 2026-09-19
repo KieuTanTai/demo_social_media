@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Identity.Interfaces;
 using Identity.Interfaces.IApplication;
 using Identity.Presentation.Record.Account;
@@ -62,13 +63,12 @@ namespace Identity.Presentation.Controller
             try
             {
                 var result = await _accountApplication.LoginAsync(requestDto.Email, requestDto.Password, cancellationToken);
-                var response = _apiHelper.MappingAuthResult(result);
-                if (result.UserProfile == null)
-                {
-                    return Ok(response);
-                }
-                var profileResponse = _apiHelper.MappingProfileResult(result.UserProfile);
-                return Ok(new { response, profileResponse }); //return both account response and profile response (applications get all of this in one req)
+                var account = _apiHelper.MappingAuthResult(result);
+                var profile = result.UserProfile is null
+                    ? null
+                    : _apiHelper.MappingProfileResult(result.UserProfile);
+                var claims = CreateClaims(account);
+                return Ok(new RecordLoginResponse(account, profile, claims));
             }
             catch (OperationCanceledException ex)
             {
@@ -172,6 +172,21 @@ namespace Identity.Presentation.Controller
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        #endregion
+
+        #region PRIVATE
+
+        private static List<RecordClaimResponse> CreateClaims(RecordAuthResponse account)
+        {
+            var nameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString());
+            var emailClaim = new Claim(ClaimTypes.Email, account.Email);
+
+            var roleClaims = account.RoleNames.Select(roleName => new Claim(ClaimTypes.Role, roleName));
+            var claims  = new List<Claim> { nameIdentifierClaim, emailClaim};
+            claims.AddRange(roleClaims);
+            return [.. claims.Select(claim => new RecordClaimResponse(claim.Type, claim.Value))];
         }
 
         #endregion

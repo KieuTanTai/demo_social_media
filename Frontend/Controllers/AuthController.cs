@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Identity.Presentation.Record.Account;
 using Shared.Persistence.Record.Auth;
 using MvcJsonOptions=Microsoft.AspNetCore.Mvc.JsonOptions;
 
@@ -40,7 +41,7 @@ namespace Frontend.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                var responseData = await response.Content.ReadFromJsonAsync<RecordAuthResponse>(
+                var responseData = await response.Content.ReadFromJsonAsync<RecordLoginResponse>(
                     _jsonSerializerOptions, cancellationToken);
 
                 if (responseData is null)
@@ -78,22 +79,17 @@ namespace Frontend.Controllers
 
         #region PRIVATE
 
-        private static ClaimsIdentity CreateClaimsIdentity(RecordAuthResponse responseData)
+        private static ClaimsIdentity CreateClaimsIdentity(RecordLoginResponse responseData)
         {
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, responseData.Email),
-                new(ClaimTypes.Name, responseData.Email),
-                new(ClaimTypes.Email, responseData.Email)
-            };
-            claims.AddRange(responseData.RoleNames.Select(role => new Claim(ClaimTypes.Role, role)));
-
+            var claims = responseData.Claims.Select(claim => new Claim(claim.Type, claim.Value));
+        
             return new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
-        private async Task AddClaimsIdentityToContext(RecordAuthResponse responseData)
+        private async Task AddClaimsIdentityToContext(RecordLoginResponse responseData)
         {
             var identity = CreateClaimsIdentity(responseData);
+            // var identity = new ClaimsIdentity(responseData.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(identity));
