@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Premise.Infrastructures.Persistence.DBContext;
+using Premise.Infrastructures.Persistence.DbContext;
 using Premise.Interfaces.IRepository;
 using Premise.Models.Premise;
 using Shared.Enum;

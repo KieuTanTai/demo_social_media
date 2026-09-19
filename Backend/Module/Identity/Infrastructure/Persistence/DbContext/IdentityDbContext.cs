@@ -7,10 +7,10 @@ using MySql.EntityFrameworkCore.Extensions;
 using MySqlModelBuilderExtensions=
     MySql.EntityFrameworkCore.Extensions.MySQLModelBuilderExtensions;
 
-namespace Identity.Infrastructure.Persistence.DBContext
+namespace Identity.Infrastructure.Persistence.DbContext
 {
     public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> contextOptions)
-        : DbContext(contextOptions)
+        : Microsoft.EntityFrameworkCore.DbContext(contextOptions)
     {
         public DbSet<AccountModel> Accounts { get; set; }
         public DbSet<RoleModel> Roles { get; set; }

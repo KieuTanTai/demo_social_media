@@ -1,4 +1,4 @@
-using Identity.Infrastructure.Persistence.DBContext;
+using Identity.Infrastructure.Persistence.DbContext;
 using Identity.Infrastructure.Repository;
 using Identity.Infrastructure.Repository.AccountRepository;
 using Identity.Infrastructure.Repository.Permission;

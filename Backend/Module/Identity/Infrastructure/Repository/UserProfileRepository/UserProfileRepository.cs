@@ -1,4 +1,4 @@
-using Identity.Infrastructure.Persistence.DBContext;
+using Identity.Infrastructure.Persistence.DbContext;
 using Identity.Interfaces.IRepository;
 using Identity.Models.Profile;
 using Microsoft.EntityFrameworkCore;

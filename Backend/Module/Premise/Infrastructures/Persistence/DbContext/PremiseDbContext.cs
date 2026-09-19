@@ -6,10 +6,10 @@ using Premise.Models.Product;
 using MySqlModelBuilderExtensions=
     MySql.EntityFrameworkCore.Extensions.MySQLModelBuilderExtensions;
 
-namespace Premise.Infrastructures.Persistence.DBContext
+namespace Premise.Infrastructures.Persistence.DbContext
 {
     public sealed class PremiseDbContext(DbContextOptions<PremiseDbContext> contextOptions) 
-        : DbContext(contextOptions)
+        : Microsoft.EntityFrameworkCore.DbContext(contextOptions)
     {
         public DbSet<PremiseModel> Premises {get; set;}
         public DbSet<LocationModel> Locations {get; set;}

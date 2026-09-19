@@ -1,12 +1,12 @@
-using Identity.Infrastructure.Persistence.DbContext;
+using Premise.Infrastructures.Persistence.DbContext;
 using Shared.Interfaces;
 
-namespace Identity.Infrastructure.Repository
+namespace Premise.Infrastructures.Repository
 {
-    public sealed class EfIdentityUnitOfWork(IdentityDbContext context) : IUnitOfWork
+    public class EfPremiseUnitOfWork(PremiseDbContext context) : IUnitOfWork
     {
-        private readonly IdentityDbContext _context = context;
-
+        private readonly PremiseDbContext _context = context;
+        
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return await _context.SaveChangesAsync(cancellationToken);
